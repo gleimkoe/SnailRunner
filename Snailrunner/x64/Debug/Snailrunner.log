@@ -1,0 +1,14 @@
+﻿  ExploreStateMachine.cpp
+d:\netcase\swe_et\praktikum\ss2023.neu\03.2020_vorlagesnailrunnervs2017_12.03_laeuft1\vorlagesnailrunner\snailrunner\snailrunner.h(4): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "ReactiveModel.h": No such file or directory
+  ForwardStateMachine.cpp
+d:\netcase\swe_et\praktikum\ss2023.neu\03.2020_vorlagesnailrunnervs2017_12.03_laeuft1\vorlagesnailrunner\snailrunner\snailrunner.h(4): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "ReactiveModel.h": No such file or directory
+  LoggingServer.cpp
+  main.cpp
+d:\netcase\swe_et\praktikum\ss2023.neu\03.2020_vorlagesnailrunnervs2017_12.03_laeuft1\vorlagesnailrunner\snailrunner\main.cpp(8): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "Fisherman.h": No such file or directory
+  ObstacleStateMachine.cpp
+d:\netcase\swe_et\praktikum\ss2023.neu\03.2020_vorlagesnailrunnervs2017_12.03_laeuft1\vorlagesnailrunner\snailrunner\snailrunner.h(4): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "ReactiveModel.h": No such file or directory
+  SearchStateMachine.cpp
+d:\netcase\swe_et\praktikum\ss2023.neu\03.2020_vorlagesnailrunnervs2017_12.03_laeuft1\vorlagesnailrunner\snailrunner\snailrunner.h(4): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "ReactiveModel.h": No such file or directory
+  SnailRunner.cpp
+d:\netcase\swe_et\praktikum\ss2023.neu\03.2020_vorlagesnailrunnervs2017_12.03_laeuft1\vorlagesnailrunner\snailrunner\snailrunner.h(4): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "ReactiveModel.h": No such file or directory
+  Code wird generiert...

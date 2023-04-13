@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{C19ADA1B-42CF-47B7-B39D-DD4CF19F1E9B}</ProjectGuid>
+    <RootNamespace>Snailrunner</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\Include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\Lib</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ExploreStateMachine.cpp" />
+    <ClCompile Include="ForwardStateMachine.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ObstacleStateMachine.cpp" />
+    <ClCompile Include="SearchStateMachine.cpp" />
+    <ClCompile Include="SnailRunner.cpp" />
+    <ClCompile Include="StartStateMachine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Include\Actor.h" />
+    <ClInclude Include="..\Include\Application.h" />
+    <ClInclude Include="..\Include\Button.h" />
+    <ClInclude Include="..\Include\Colour.h" />
+    <ClInclude Include="..\Include\Contact.h" />
+    <ClInclude Include="..\Include\Controlled.h" />
+    <ClInclude Include="..\Include\Controller.h" />
+    <ClInclude Include="..\Include\ControlLoop.h" />
+    <ClInclude Include="..\Include\Counter.h" />
+    <ClInclude Include="..\Include\CounterPort.h" />
+    <ClInclude Include="..\Include\CrossRoads.h" />
+    <ClInclude Include="..\Include\CrossWalk.h" />
+    <ClInclude Include="..\Include\Direction.h" />
+    <ClInclude Include="..\Include\Distance.h" />
+    <ClInclude Include="..\Include\educationline.h" />
+    <ClInclude Include="..\Include\EmuController.h" />
+    <ClInclude Include="..\Include\EmulationType.h" />
+    <ClInclude Include="..\Include\EventField.h" />
+    <ClInclude Include="..\Include\FisherMan.h" />
+    <ClInclude Include="..\Include\FishermanBase.h" />
+    <ClInclude Include="..\Include\FStateMachine.h" />
+    <ClInclude Include="..\Include\fversion.h" />
+    <ClInclude Include="..\Include\InputPort.h" />
+    <ClInclude Include="..\Include\IntelligentMotor.h" />
+    <ClInclude Include="..\Include\Lamp.h" />
+    <ClInclude Include="..\Include\Makros.h" />
+    <ClInclude Include="..\Include\Model.h" />
+    <ClInclude Include="..\Include\Motor.h" />
+    <ClInclude Include="..\Include\MotorPort.h" />
+    <ClInclude Include="..\Include\OutputPort.h" />
+    <ClInclude Include="..\Include\PedestrianLight.h" />
+    <ClInclude Include="..\Include\Photo.h" />
+    <ClInclude Include="..\Include\RbController.h" />
+    <ClInclude Include="..\Include\ReactiveModel.h" />
+    <ClInclude Include="..\Include\RunUnit.h" />
+    <ClInclude Include="..\Include\Sensor.h" />
+    <ClInclude Include="..\Include\supervision.h" />
+    <ClInclude Include="..\Include\Temperature.h" />
+    <ClInclude Include="..\Include\Timer.h" />
+    <ClInclude Include="..\Include\Timing.h" />
+    <ClInclude Include="..\Include\TrafficLight.h" />
+    <ClInclude Include="..\Include\Trail.h" />
+    <ClInclude Include="..\Include\TxController.h" />
+    <ClInclude Include="..\Include\TxControllerLogging.h" />
+    <ClInclude Include="..\Include\TxControllerSupervision.h" />
+    <ClInclude Include="..\Include\UniversalInput.h" />
+    <ClInclude Include="..\Include\WaitUntil.h" />
+    <ClInclude Include="..\Include\Win32Timer.h" />
+    <ClInclude Include="ExploreStateMachine.h" />
+    <ClInclude Include="ForwardStateMachine.h" />
+    <ClInclude Include="ObstacleStateMachine.h" />
+    <ClInclude Include="SearchStateMachine.h" />
+    <ClInclude Include="SnailRunner.h" />
+    <ClInclude Include="StartStateMachine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\Lib\Fisherman.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Debug\Fisherman.dll" />
+    <None Include="..\Debug\FtLib.dll" />
+    <None Include="..\Debug\ftMscLib.dll" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
