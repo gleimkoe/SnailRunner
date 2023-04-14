@@ -1,2 +1,10 @@
-﻿  StartStateMachine.cpp
+﻿  ExploreStateMachine.cpp
+  ForwardStateMachine.cpp
+  ObstacleStateMachine.cpp
+  SearchStateMachine.cpp
+  SnailRunner.cpp
+  StartStateMachine.cpp
+  main.cpp
+  Code wird generiert...
+  LINK : Z:\Software_Engineering\SnailRunner\Debug\Snailrunner.exe wurde nicht gefunden oder beim letzten inkrementellen Linkvorgang nicht erstellt; vollständiger Link wird durchgeführt.
   Snailrunner.vcxproj -> Z:\Software_Engineering\SnailRunner\Debug\Snailrunner.exe
