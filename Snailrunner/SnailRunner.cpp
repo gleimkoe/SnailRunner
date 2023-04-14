@@ -209,26 +209,26 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_DISTANCE_HIGH = 40;
 	const int THRESHOLD_DISTANCE = 10;
 	const int THRESHOLD_COLOR_GRAU_WEISS = 1000;
-	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 1800;
+	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 2000;
 
 	if (bfield&(1 << INPUT_COLOUR_DOWN)) {
 		int col = colourdown().value();
 		// --Überprüfe, ob Schwellenwert überschritten.
-		if (col > THRESHOLD_COLOR && last_colour_down < THRESHOLD_COLOR) {
+		if (col > THRESHOLD_COLOR_GRAU_SCHWARZ && last_colour_down < THRESHOLD_COLOR_GRAU_SCHWARZ) {
 			if (mission == EXPLORE_MISSION)
-				ex_state->handle(ExploreStateMachine::Event::ON_TRAIL);
+				ex_state->handle(ExploreStateMachine::Event::OFF_TRAIL);
 			else if (mission == SEARCH_MISSION)
 				se_state->handle(SearchStateMachine::Event::ON_TRAIL);
 			else if (mission == START_MISSION)
-				st_state->handle(StartStateMachine::Event::ON_TRAIL);
+				st_state->handle(StartStateMachine::Event::OFF_TRAIL);
 		}
-		else if (col<THRESHOLD_COLOR && last_colour_down>THRESHOLD_COLOR) {
+		else if (col<THRESHOLD_COLOR_GRAU_WEISS && last_colour_down>THRESHOLD_COLOR_GRAU_WEISS) {
 			if (mission == EXPLORE_MISSION)
-				ex_state->handle(ExploreStateMachine::Event::OFF_TRAIL);
+				ex_state->handle(ExploreStateMachine::Event::ON_TRAIL);
 			else if (mission == FORWARD_MISSION)
 				fw_state->handle(ForwardStateMachine::Event::OFF_TRAIL);
 			else if (mission == START_MISSION)
-				st_state->handle(StartStateMachine::Event::OFF_TRAIL);
+				st_state->handle(StartStateMachine::Event::ON_TRAIL);
 		}
 		else if (last_colour_down > THRESHOLD_COLOR_GRAU_SCHWARZ && col > THRESHOLD_COLOR_GRAU_WEISS && col < THRESHOLD_COLOR_GRAU_SCHWARZ) {
 			if (mission == START_MISSION)
@@ -257,19 +257,19 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 		else if (mission == START_MISSION) {
 
 			int dis = ahead().value();
-			cout << "test0" << endl;
+			//cout << "test0" << endl;
 			while (st_state->state() == StartStateMachine::State::START)
 			{
 				dis = ahead().value();
 				WaitUntilIsOver(100);
-				cout << "test1" << endl;
+				//cout << "test1" << endl;
 				if (dis >= THRESHOLD_DISTANCE && last_dis < THRESHOLD_DISTANCE) {
 					st_state->handle(StartStateMachine::Event::NOT_WALL_AHEAD);
-					cout << "test2" << endl;
+					//cout << "test2" << endl;
 				}
 				else if (dis < THRESHOLD_DISTANCE && last_dis >= THRESHOLD_DISTANCE) {
 					st_state->handle(StartStateMachine::Event::WALL_AHEAD);
-					cout << "test3" << endl;
+					//cout << "test3" << endl;
 				}
 
 			}

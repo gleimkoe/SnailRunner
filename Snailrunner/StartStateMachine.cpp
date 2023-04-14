@@ -138,19 +138,20 @@ void StartStateMachine::transition(Event ev) {
 	case State::AUSRICHTEN:
 		switch (ev)
 		{
+
 		case StartStateMachine::Event::WALL_AHEAD:
 			break;
 		case StartStateMachine::Event::NOT_WALL_AHEAD:
 			break;
 		case StartStateMachine::Event::OFF_TRAIL:
 			break;
-		case StartStateMachine::Event::ON_TRAIL:onLeavingAusrichten(); onEnteringOnTrail();
+		case StartStateMachine::Event::ON_TRAIL:
 			break;
 		case StartStateMachine::Event::ECKEN_CNT:
 			break;
 		case StartStateMachine::Event::IS_STOPPED:
 			break;
-		case StartStateMachine::Event::ON_GREY:
+		case StartStateMachine::Event::ON_GREY:onLeavingAusrichten(); onEnteringOnTrail();
 			break;
 		default: onEnteringFailure();
 		}
@@ -315,64 +316,75 @@ void StartStateMachine::onEnteringFailure() {
 
 void StartStateMachine::onEnteringStart() { // wait
 	state(State::START);
+	cout << "Start" << endl;
 }
 
 void StartStateMachine::onEnteringSuchen() { //forward 
 	state(State::SUCHEN);
-	robot->forward(0.1, METER);
+	robot->forward(1, METER);
 	count = 1;
+	cout << "Suchen" << endl;
 }
 
 void StartStateMachine::onEnteringAusrichten() { // forward(10cm), turn -90
 	state(State::AUSRICHTEN);
-	robot->forward(0.1, METER);
+	robot->forward(0.2, METER);
+	WaitUntilIsOver(1500);
 	robot->turn(-90);
+	cout << "Ausrichten" << endl;
 }
 
 void StartStateMachine::onEnteringOnTrail() {// forward
 	state(State::ON_TRAIL);
 	robot->forward(1, METER);
 	count = 1;
+	cout << "OnTrail" << endl;
 }
 
 void StartStateMachine::onEnteringOffTrail() {// stop
 	state(State::OFF_TRAIL);
 	robot->stop();
+	cout << "OffTrail" << endl;
 }
 
 void StartStateMachine::onEnteringStopping() {// ecken_cnt()
 	state(State::STOPPING);
+	cout << "Stopping" << endl;
 
 }
 
 void StartStateMachine::onEnteringCorrectTrailRight() { // turn()
 	state(State::CORRECT_TRAIL_RIGHT);
 	count *= 2;
-	if (count == 8)
+	if (count == 16)
 	{
 		ecke++;
-		cout << "Ecke Nr. : " << ecke;
+		cout << "Ecke Nr. : " << ecke << endl;
 	}
-	robot->turn(count * 15);
+	robot->turn(count * 7.5);
+	cout << "CorrectRight" << endl;
 }
 void StartStateMachine::onEnteringCorrectTrailLeft() { // turn()
 	state(State::CORRECT_TRAIL_LEFT);
 	count *= 2;
-	if (count == 8)
+	if (count == 16)
 	{
 		ecke++;
-		cout << "Ecke Nr. : " << ecke;
+		cout << "Ecke Nr. : " << ecke << endl;
 	}
-	robot->turn(count * -15);
+	robot->turn(count * -7.5);
+	cout << "CorrectLeft" << endl;
 }
 void StartStateMachine::onEnteringLampeStop() {//lamp.on
 	state(State::LAMPE_STOP);
 	robot->stop();
 	robot->lampright().on();
+	cout << "LampeStop" << endl;
 }
 void StartStateMachine::onEnteringFinal() {
 	state(State::FINAL);
 	robot->lampright().on();
+	cout << "Final" << endl;
 }
 
 void StartStateMachine::onLeavingAusrichten(){ // Stop
