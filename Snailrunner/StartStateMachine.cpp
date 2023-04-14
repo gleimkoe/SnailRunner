@@ -21,6 +21,7 @@ const std::map<StartStateMachine::State, std::string> StartStateMachine::StateDe
 const std::map<StartStateMachine::Event, std::string> StartStateMachine::EventDescription = {
 	{ Event::IS_STOPPED, "IS_STOPPED" },
 	{ Event::ON_TRAIL, "ON_TRAIL" },
+	{ Event::ON_GREY, "ON_GREY" },
 	{ Event::OFF_TRAIL, "OFF_TRAIL" },
 	{ Event::WALL_AHEAD, "WALL_AHEAD" },
 	{ Event::NOT_WALL_AHEAD, "NOT_WALL_AHEAD" },
@@ -38,7 +39,7 @@ void StartStateMachine::state(State s) {
 	bool isNewStateAvailable = (StateDescription.find(s) != StateDescription.end());
 	/* --If program stops here, you have to add a state description to the map at top of this file !!! */
 	if (!isOldStateAvailable && !isNewStateAvailable)
-		OutputDebugString((LPCTSTR)"*** CHECK YOUR CODE! STATE DESCRIPTION IS MISSING ***");
+	OutputDebugString((LPCTSTR)"*** CHECK YOUR CODE! STATE DESCRIPTION IS MISSING ***");
 
 	/* --Log string. */
 	std::string note = std::string("OLD STATE:") + (isOldStateAvailable ? StateDescription.at(mystate) : "*ERROR*")
@@ -77,7 +78,6 @@ void StartStateMachine::handle(Event ev) {
 	/* --If program stops here, you have to add an event description to the map at top of this file !!! */
 	if (!isEventAvailable)
 		OutputDebugString((LPCTSTR)"*** CHECK YOUR CODE! EVENT DESCRIPTION IS MISSING ***");
-
 	/* --Log string. */
 	std::string note = std::string("EVENT TRIGGER:") + (isEventAvailable ? EventDescription.at(ev) : "*ERROR*");
 	robot->controller()->annotate(note);
@@ -108,6 +108,8 @@ void StartStateMachine::transition(Event ev) {
 			break;
 		case StartStateMachine::Event::IS_STOPPED:
 			break;
+		case StartStateMachine::Event::ON_GREY:
+			break;
 		default: onEnteringFailure();
 		}
 		break;
@@ -121,11 +123,13 @@ void StartStateMachine::transition(Event ev) {
 			break;
 		case StartStateMachine::Event::OFF_TRAIL:onLeavingSuchen(); onEnteringSuchen();
 			break;
-		case StartStateMachine::Event::ON_TRAIL:onLeavingSuchen(); onEnteringAusrichten();
+		case StartStateMachine::Event::ON_TRAIL:
 			break;
 		case StartStateMachine::Event::ECKEN_CNT:
 			break;
 		case StartStateMachine::Event::IS_STOPPED:
+			break;
+		case StartStateMachine::Event::ON_GREY: onLeavingSuchen(); onEnteringAusrichten();
 			break;
 		default: onEnteringFailure();
 		}
@@ -134,17 +138,20 @@ void StartStateMachine::transition(Event ev) {
 	case State::AUSRICHTEN:
 		switch (ev)
 		{
+
 		case StartStateMachine::Event::WALL_AHEAD:
 			break;
 		case StartStateMachine::Event::NOT_WALL_AHEAD:
 			break;
 		case StartStateMachine::Event::OFF_TRAIL:
 			break;
-		case StartStateMachine::Event::ON_TRAIL:onLeavingAusrichten(); onEnteringOnTrail();
+		case StartStateMachine::Event::ON_TRAIL:
 			break;
 		case StartStateMachine::Event::ECKEN_CNT:
 			break;
 		case StartStateMachine::Event::IS_STOPPED:
+			break;
+		case StartStateMachine::Event::ON_GREY:onLeavingAusrichten(); onEnteringOnTrail();
 			break;
 		default: onEnteringFailure();
 		}
@@ -165,6 +172,8 @@ void StartStateMachine::transition(Event ev) {
 			break;
 		case StartStateMachine::Event::IS_STOPPED:onLeavingOnTrail(); onEnteringOnTrail();
 			break;
+		case StartStateMachine::Event::ON_GREY:
+			break;
 		default: onEnteringFailure();
 		}
 		break;
@@ -183,6 +192,8 @@ void StartStateMachine::transition(Event ev) {
 		case StartStateMachine::Event::ECKEN_CNT:
 			break;
 		case StartStateMachine::Event::IS_STOPPED: onLeavingOffTrail(); onEnteringCorrectTrailLeft();
+			break;
+		case StartStateMachine::Event::ON_GREY:
 			break;
 		default: onEnteringFailure();
 		}
@@ -203,6 +214,8 @@ void StartStateMachine::transition(Event ev) {
 			break;
 		case StartStateMachine::Event::IS_STOPPED: onLeavingStopping(); onEnteringOnTrail();
 			break;
+		case StartStateMachine::Event::ON_GREY:
+			break;
 		default: onEnteringFailure();
 		}
 		break;
@@ -221,6 +234,8 @@ void StartStateMachine::transition(Event ev) {
 		case StartStateMachine::Event::ECKEN_CNT:
 			break;
 		case StartStateMachine::Event::IS_STOPPED: onLeavingCorrectTrailLeft(); onEnteringCorrectTrailRight();
+			break;
+		case StartStateMachine::Event::ON_GREY:
 			break;
 		default: onEnteringFailure();
 		}
@@ -241,6 +256,8 @@ void StartStateMachine::transition(Event ev) {
 			break;
 		case StartStateMachine::Event::IS_STOPPED: onLeavingCorrectTrailRight(); onEnteringCorrectTrailLeft();
 			break;
+		case StartStateMachine::Event::ON_GREY:
+			break;
 		default: onEnteringFailure();
 		}
 		break;
@@ -259,6 +276,8 @@ void StartStateMachine::transition(Event ev) {
 		case StartStateMachine::Event::ECKEN_CNT:
 			break;
 		case StartStateMachine::Event::IS_STOPPED: onLeavingLampeStop(); onEnteringFinal();
+			break;
+		case StartStateMachine::Event::ON_GREY:
 			break;
 		default: onEnteringFailure();
 		}
@@ -279,6 +298,8 @@ void StartStateMachine::transition(Event ev) {
 			break;
 		case StartStateMachine::Event::IS_STOPPED:
 			break;
+		case StartStateMachine::Event::ON_GREY:
+			break;
 		default:;
 		}
 		break;
@@ -295,65 +316,75 @@ void StartStateMachine::onEnteringFailure() {
 
 void StartStateMachine::onEnteringStart() { // wait
 	state(State::START);
+	cout << "Start" << endl;
 }
 
 void StartStateMachine::onEnteringSuchen() { //forward 
 	state(State::SUCHEN);
 	robot->forward(1, METER);
 	count = 1;
+	cout << "Suchen" << endl;
 }
 
 void StartStateMachine::onEnteringAusrichten() { // forward(10cm), turn -90
 	state(State::AUSRICHTEN);
-	robot->forward(0.15, METER);
-	WaitUntilIsOver(3000);
+	robot->forward(0.2, METER);
+	WaitUntilIsOver(1500);
 	robot->turn(-90);
+	cout << "Ausrichten" << endl;
 }
 
 void StartStateMachine::onEnteringOnTrail() {// forward
 	state(State::ON_TRAIL);
 	robot->forward(1, METER);
 	count = 1;
+	cout << "OnTrail" << endl;
 }
 
 void StartStateMachine::onEnteringOffTrail() {// stop
 	state(State::OFF_TRAIL);
 	robot->stop();
+	cout << "OffTrail" << endl;
 }
 
 void StartStateMachine::onEnteringStopping() {// ecken_cnt()
 	state(State::STOPPING);
+	cout << "Stopping" << endl;
 
 }
 
 void StartStateMachine::onEnteringCorrectTrailRight() { // turn()
 	state(State::CORRECT_TRAIL_RIGHT);
 	count *= 2;
-	if (count == 8)
+	if (count == 16)
 	{
 		ecke++;
-		cout << "Ecke Nr. : " << ecke;
+		cout << "Ecke Nr. : " << ecke << endl;
 	}
-	robot->turn(count * 15);
+	robot->turn(count * 7.5);
+	cout << "CorrectRight" << endl;
 }
 void StartStateMachine::onEnteringCorrectTrailLeft() { // turn()
 	state(State::CORRECT_TRAIL_LEFT);
 	count *= 2;
-	if (count == 8)
+	if (count == 16)
 	{
 		ecke++;
-		cout << "Ecke Nr. : " << ecke;
+		cout << "Ecke Nr. : " << ecke << endl;
 	}
-	robot->turn(count * -15);
+	robot->turn(count * -7.5);
+	cout << "CorrectLeft" << endl;
 }
 void StartStateMachine::onEnteringLampeStop() {//lamp.on
 	state(State::LAMPE_STOP);
 	robot->stop();
 	robot->lampright().on();
+	cout << "LampeStop" << endl;
 }
 void StartStateMachine::onEnteringFinal() {
 	state(State::FINAL);
 	robot->lampright().on();
+	cout << "Final" << endl;
 }
 
 void StartStateMachine::onLeavingAusrichten(){ // Stop
@@ -377,6 +408,5 @@ void StartStateMachine::onLeavingFinal() {}
 
 void StartStateMachine::onLeavingStart() {}
 void StartStateMachine::onLeavingSuchen() { // Stop
-	
 	robot->stop();
 }
