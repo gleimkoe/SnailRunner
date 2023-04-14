@@ -208,8 +208,8 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_DISTANCE_LOW = 30;
 	const int THRESHOLD_DISTANCE_HIGH = 40;
 	const int THRESHOLD_DISTANCE = 10;
-	const int THRESHOLD_COLOR_GRAU_WEISS = 1200;
-	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 2000;
+	const int THRESHOLD_COLOR_GRAU_WEISS = 1000;
+	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 1800;
 
 	if (bfield&(1 << INPUT_COLOUR_DOWN)) {
 		int col = colourdown().value();
