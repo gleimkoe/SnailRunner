@@ -121,10 +121,12 @@
   <ItemGroup>
     <ClCompile Include="ExploreStateMachine.cpp" />
     <ClCompile Include="ForwardStateMachine.cpp" />
+    <ClCompile Include="functions.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ObstacleStateMachine.cpp" />
     <ClCompile Include="SearchStateMachine.cpp" />
     <ClCompile Include="SnailRunner.cpp" />
+    <ClCompile Include="StartLauferMachine.cpp" />
     <ClCompile Include="StartStateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,9 +180,11 @@
     <ClInclude Include="..\Include\Win32Timer.h" />
     <ClInclude Include="ExploreStateMachine.h" />
     <ClInclude Include="ForwardStateMachine.h" />
+    <ClInclude Include="functions.h" />
     <ClInclude Include="ObstacleStateMachine.h" />
     <ClInclude Include="SearchStateMachine.h" />
     <ClInclude Include="SnailRunner.h" />
+    <ClInclude Include="StartLauferMachine.h" />
     <ClInclude Include="StartStateMachine.h" />
   </ItemGroup>
   <ItemGroup>

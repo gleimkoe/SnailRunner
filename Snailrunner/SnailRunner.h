@@ -18,6 +18,7 @@
 #include "ForwardStateMachine.h"
 #include "SearchStateMachine.h"
 #include "StartStateMachine.h"
+#include "StartLauferMachine.h"
 
 #include "WaitUntil.h"
 
@@ -28,7 +29,7 @@ public:
 	/*! Der Snail Runner unterstützt 2 Missionen:
 	 *  EXPLORE_MISSION   : Spurverfolgung
 	 *  OBSTACLE_MISSION : Fährt auf Wand zu, stoppt und dreht; dreimalige Wiederholung. */
-	enum Mission { EXPLORE_MISSION, OBSTACLE_MISSION, FORWARD_MISSION, SEARCH_MISSION, START_MISSION };
+	enum Mission { EXPLORE_MISSION, OBSTACLE_MISSION, FORWARD_MISSION, SEARCH_MISSION, START_MISSION, START_LAUFER_MISSION };
 
 	/*! Diese Methode setzen die nächste Mission. */
 	void activate(Mission m) { mission=m; }
@@ -72,13 +73,59 @@ public:
 
 	/* -- Diese Funktion vergleicht den ecke-Wert mit dem eingegebenen Wert*/
 	
-	bool vergleich(int SollEcken);
+	bool vergleich_ecke(int SollEcken);
+	bool vergleich_runde(int SollRunde);
 	void sollecken_setzen(int vorgabe) { SollEcken = vorgabe; }
+	void sollrunde_setzen(int vorgabe) { SollRunde = vorgabe; }
+
+
+	/******************************************************************************/
+	//
+	//									KALIBRIERUNG
+	//
+	/******************************************************************************/
+	// color values
+	int white = 1100;
+	int black = 1900;
+	int grey = 1400;
+
+	// threshold values Farbsensor unten
+	int threshold_grey_low = 1300;
+	int threshold_grey_high = 1600;
+	int threshold_square_gradient = 420;
+
+
+	/******************************************************************************/
+	//
+	//									SETTINGS
+	//
+	/******************************************************************************/
+
+	// true - starter
+	// false - follower
+	bool start_position;
+
+	// true - clockwise
+	// false - counterclockwise
+	bool direction = true;
+
+	// amount of laps
+	unsigned lap_amount = 1;
+
+	/******************************************************************************/
+	//
+	//									LOGGING
+	//
+	/******************************************************************************/
+	unsigned current_lap = 1;
+	unsigned current_corner = 0;
+	unsigned offtrail_count = 0;
 
 
 private:
 
 	int SollEcken;
+	int SollRunde;
 
 	/*! Die Aktoren (Motoren und Lampen) des Roboters. */
 	IntelligentMotor leftmotor;
@@ -114,6 +161,7 @@ private:
 	ForwardStateMachine* fw_state;
 	SearchStateMachine* se_state;
 	StartStateMachine* st_state;
+	StartLauferMachine* sl_state;
 
 	/*! Aktuelle Mission. */
 	Mission mission;

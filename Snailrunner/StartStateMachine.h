@@ -10,7 +10,7 @@ class SnailRunner;
 class StartStateMachine {
 public:
 	
-	enum class State { FAILURE, START, SUCHEN, AUSRICHTEN, LAMPE_STOP, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, ON_GREY, STOPPING, FINAL };
+	enum class State { FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, LAMPE_STOP, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, FINAL };
 	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, ECKEN_CNT, IS_STOPPED, ON_GREY};
 
 	StartStateMachine(SnailRunner* r);
@@ -37,6 +37,8 @@ private:
 	void onEnteringStart(); // wait
 	void onEnteringSuchen(); //forward 
 	void onEnteringAusrichten(); // forward(10cm), turn -90
+	void onEnteringAusrichten_2();
+	void onEnteringAusrichten_3();
 	void onEnteringOnTrail();// forward
 	void onEnteringOffTrail();// stop
 	void onEnteringStopping();// ecken_cnt()
@@ -49,11 +51,14 @@ private:
 	/* -- Methods called when in a state */
 	//void inAusrichten(); // turn(-90)
 
-	/* -- Methods called when leaving a state. */void onLeavingStart();
-	void onLeavingSuchen()
-	; //stop
+	/* -- Methods called when leaving a state. */
+	void onLeavingStart();
+	void onLeavingSuchen(); //stop
 	
 	void onLeavingAusrichten(); // Stop
+	void onLeavingAusrichten_2();
+	void onLeavingAusrichten_3();
+	
 	void onLeavingOnTrail();
 	void onLeavingStopping();
 	void onLeavingOffTrail();

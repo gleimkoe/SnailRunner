@@ -14,6 +14,7 @@ using namespace std;
 #include "SnailRunner.h"
 #include "TxControllerSupervision.h"
 #include "LoggingServer.h"
+#include "functions.h"
 
 /* --Input Menue. */
 void imenue(double& val, RunUnit& unit) {
@@ -261,6 +262,10 @@ void menue() {
 			 << "[3] State Machine Explore III (Termine 7/8/9/10)\n"   // Aufteilung in zwei Statemachines unentbehrlich ab Termin 7
 			                                                                      // Weitere Kandidaten: classes SearchStateMachine + ForwardStateMachine
 			 << "[4] Start State Machine IIII (MS1)\n"
+			 << "[5] Kalibrierung \n"
+			 << "[6] Einstellungen\n"
+			 << "[7] Start Laufer Machine \n"
+
 			 << "    --------------------------------\n"
 			 << "[Q] Quit"
 			 << endl;
@@ -347,14 +352,37 @@ void menue() {
 			cout << "Anzahl der Ecken eingeben:";
 			cin >> SollEcke; 
 			runner->activate(SnailRunner::START_MISSION);
-			runner->sollecken_setzen(SollEcke);
 			StartSupervision(runner);
+			runner->sollecken_setzen(SollEcke);
+			
 			cout << "Start State Machine is running!!" << endl
 				<< "Enter 'OK' to stop: " << flush;
 			cin >> dummy;
 			StopSupervision();
 			break;
+		case '5':
+			StartSupervision(runner, NON_REACTIVE);
+			calibrationMenu(runner);
+			StopSupervision();
+			break;
+		case '6':
+			StartSupervision(runner, NON_REACTIVE);
+			settingsMenu(runner);
+			StopSupervision();
+			break;
+		case '7':
+			int SollRunde;
+			cout << "Anzahl der Runden eingeben:";
+			cin >> SollRunde;
+			runner->activate(SnailRunner::START_LAUFER_MISSION);
+			StartSupervision(runner);
+			runner->sollrunde_setzen(SollRunde);
 
+			cout << "Start Laufer Machine is running!!" << endl
+				<< "Enter 'OK' to stop: " << flush;
+			cin >> dummy;
+			StopSupervision();
+			break;
 		} ;
 		cin.seekg(0, ios::end);
 		cin.clear();

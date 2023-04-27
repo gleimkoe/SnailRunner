@@ -7,26 +7,28 @@ const std::map<StartStateMachine::State, std::string> StartStateMachine::StateDe
 	{ State::FAILURE, "FAILURE" },
 	{ State::START, "START" },
 	{ State::SUCHEN, "SUCHEN" },
-	{ State::STOPPING, "STOPPING" },
+	{ State::AUSRICHTEN, "AUSRICHTEN" },
+	{ State::AUSRICHTEN_2, "AUSRICHTEN_2" },
+	{ State::AUSRICHTEN_3, "AUSRICHTEN_3" },
+	{ State::LAMPE_STOP, "LAMPE_STOP" },
 	{ State::CORRECT_TRAIL_LEFT, "CORRECT_TRAIL_LEFT" },
 	{ State::CORRECT_TRAIL_RIGHT, "CORRECT_TRAIL_RIGHT" },
-	{ State::AUSRICHTEN, "AUSRICHTEN" },
-	{ State::OFF_TRAIL, "OFF_TRAIL" },
 	{ State::ON_TRAIL, "ON_TRAIL" },
+	{ State::OFF_TRAIL, "OFF_TRAIL" },
+	{ State::STOPPING, "STOPPING" },
 	{ State::FINAL, "FINAL" },
-	{ State::LAMPE_STOP, "LAMPE_STOP" }
+
 	/* --INFO: Here you should add new states for debugging purpose. */
 };
 
 const std::map<StartStateMachine::Event, std::string> StartStateMachine::EventDescription = {
-	{ Event::IS_STOPPED, "IS_STOPPED" },
-	{ Event::ON_TRAIL, "ON_TRAIL" },
-	{ Event::ON_GREY, "ON_GREY" },
-	{ Event::OFF_TRAIL, "OFF_TRAIL" },
 	{ Event::WALL_AHEAD, "WALL_AHEAD" },
 	{ Event::NOT_WALL_AHEAD, "NOT_WALL_AHEAD" },
-	{ Event::ECKEN_CNT, "ECKEN_CNT" }
-
+	{ Event::OFF_TRAIL, "OFF_TRAIL" },
+	{ Event::ON_TRAIL, "ON_TRAIL" },
+	{ Event::ECKEN_CNT, "ECKEN_CNT" },
+	{ Event::IS_STOPPED, "IS_STOPPED" },
+	{ Event::ON_GREY, "ON_GREY" }
 	/* --INFO: Here you should add new events for debugging purpose. */
 };
 
@@ -138,7 +140,6 @@ void StartStateMachine::transition(Event ev) {
 	case State::AUSRICHTEN:
 		switch (ev)
 		{
-
 		case StartStateMachine::Event::WALL_AHEAD:
 			break;
 		case StartStateMachine::Event::NOT_WALL_AHEAD:
@@ -149,13 +150,55 @@ void StartStateMachine::transition(Event ev) {
 			break;
 		case StartStateMachine::Event::ECKEN_CNT:
 			break;
-		case StartStateMachine::Event::IS_STOPPED:
+		case StartStateMachine::Event::IS_STOPPED: onLeavingAusrichten(); onEnteringAusrichten_2();
 			break;
-		case StartStateMachine::Event::ON_GREY:onLeavingAusrichten(); onEnteringOnTrail();
+		case StartStateMachine::Event::ON_GREY: 
 			break;
 		default: onEnteringFailure();
 		}
 		break;
+
+	case State::AUSRICHTEN_2:
+		switch (ev)
+		{
+		case StartStateMachine::Event::WALL_AHEAD:
+			break;
+		case StartStateMachine::Event::NOT_WALL_AHEAD:
+			break;
+		case StartStateMachine::Event::OFF_TRAIL:
+			break;
+		case StartStateMachine::Event::ON_TRAIL:
+			break;
+		case StartStateMachine::Event::ECKEN_CNT:
+			break;
+		case StartStateMachine::Event::IS_STOPPED: 
+			break;
+		case StartStateMachine::Event::ON_GREY:onLeavingAusrichten_2(); onEnteringAusrichten_3();
+			break;
+		default: onEnteringFailure();
+			break;
+		}
+
+	case State::AUSRICHTEN_3:
+		switch (ev)
+		{
+		case StartStateMachine::Event::WALL_AHEAD:
+			break;
+		case StartStateMachine::Event::NOT_WALL_AHEAD:
+			break;
+		case StartStateMachine::Event::OFF_TRAIL:
+			break;
+		case StartStateMachine::Event::ON_TRAIL: onLeavingAusrichten_3(); onEnteringOnTrail();
+			break;
+		case StartStateMachine::Event::ECKEN_CNT:
+			break;
+		case StartStateMachine::Event::IS_STOPPED:
+			break;
+		case StartStateMachine::Event::ON_GREY:
+			break;
+		default: onEnteringFailure();
+			break;
+		}
 
 	case State::ON_TRAIL:
 		switch (ev)
@@ -326,12 +369,23 @@ void StartStateMachine::onEnteringSuchen() { //forward
 	cout << "Suchen" << endl;
 }
 
-void StartStateMachine::onEnteringAusrichten() { // forward(10cm), turn -90
+void StartStateMachine::onEnteringAusrichten() { // forward(10cm)
 	state(State::AUSRICHTEN);
-	robot->forward(0.2, METER);
-	WaitUntilIsOver(1500);
-	robot->turn(-90);
+	robot->forward(0.1, METER);
+	
 	cout << "Ausrichten" << endl;
+}
+
+void StartStateMachine::onEnteringAusrichten_2() { // turn(360)
+	state(State::AUSRICHTEN_2);
+	robot->turn(-180);
+	cout << "Ausrichten_2" << endl;
+}
+
+void StartStateMachine::onEnteringAusrichten_3() {
+	state(State::AUSRICHTEN_3);
+	robot->forward(1, METER);
+	cout << "Ausrichten_3" << endl;
 }
 
 void StartStateMachine::onEnteringOnTrail() {// forward
@@ -387,11 +441,18 @@ void StartStateMachine::onEnteringFinal() {
 	cout << "Final" << endl;
 }
 
-void StartStateMachine::onLeavingAusrichten(){ // Stop
+void StartStateMachine::onLeavingAusrichten() {} // Stop
+	//robot->stop();
+
+void StartStateMachine::onLeavingAusrichten_2() {
 	robot->stop();
+	cout << "AUSRICHTEN_2 STOP" << endl;
 }
+
+void StartStateMachine::onLeavingAusrichten_3() {}
 void StartStateMachine::onLeavingOnTrail() {}
 void StartStateMachine::onLeavingStopping() {}
+
 void StartStateMachine::onLeavingOffTrail(){
 	robot->forward(0.1, METER);
 }

@@ -48,6 +48,12 @@
     <ClCompile Include="StartStateMachine.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="StartLauferMachine.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="functions.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExploreStateMachine.h">
@@ -210,6 +216,12 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="StartStateMachine.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="StartLauferMachine.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="functions.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
