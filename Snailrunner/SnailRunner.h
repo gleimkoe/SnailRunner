@@ -11,6 +11,7 @@
 #include "IntelligentMotor.h"
 #include <stdlib.h>
 #include <math.h>
+#include <queue>
 
 /* --Include State Machines. */
 #include "ExploreStateMachine.h"

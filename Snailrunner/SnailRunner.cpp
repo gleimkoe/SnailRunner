@@ -230,11 +230,33 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 1600;
 	const int THRESHOLD_COLOR_BACK_MIN = 1000;
 	const int THRESHOLD_GRADIENT = 275;
+
+	/*
+	queue<int> fifo_grau;
+	const int max = 5;
+	int val_old = 0;
+	*/
+
 	//const int THRESHOLD_COLOR_BACK_MAX =
 
 
 	if (bfield&(1 << INPUT_COLOUR_DOWN)) {
+
 		int col = colourdown().value();
+/*		if (fifo_grau.size() < max)
+		{
+			fifo_grau.push(colourdown().value());
+			cout << col << endl;
+		}
+		else
+		{
+			val_old = fifo_grau.front();
+			fifo_grau.pop();
+			fifo_grau.push(colourdown().value());
+			cout << val_old << " , " << col << endl;
+		}
+*/
+
 		// --Überprüfe, ob Schwellenwert überschritten.
 		if (col > threshold_grey_high && last_colour_down < threshold_grey_high) {
 			if (mission == EXPLORE_MISSION)
@@ -282,7 +304,8 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			}
 				
 		}
-		else if (col  > threshold_grey_low && col < threshold_grey_high ) { // last_colour_down > THRESHOLD_COLOR_GRAU_SCHWARZ &&  col > THRESHOLD_COLOR_GRAU_WEISS && col < THRESHOLD_COLOR_GRAU_SCHWARZ
+	
+		else if ((col  > threshold_grey_low && col < threshold_grey_high) && (last_colour_down > threshold_grey_low && last_colour_down < threshold_grey_high)) { // last_colour_down > THRESHOLD_COLOR_GRAU_SCHWARZ &&  col > THRESHOLD_COLOR_GRAU_WEISS && col < THRESHOLD_COLOR_GRAU_SCHWARZ
 			if (mission == START_MISSION)
 			{
 				std::cout << "AUFGRAUAUFGRAUAUFGRAU" << std::endl;
@@ -342,7 +365,7 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 
 					}
 				}
-				last_colour_down = col;
+				last_colour_back = col;
 			
 		}
 		else if (mission == WEITER_LAUFER_MISSION)
