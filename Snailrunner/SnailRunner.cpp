@@ -51,7 +51,7 @@ colourSensordown(INFO_COLOUR_DOWN),
 distance(INFO_DISTANCE),
 accuLevel(ANALOG_10KV, I1, INFO_ACCU_LEVEL),
 pushButton(INFO_BUTTON),
-ex_state(0), ob_state(0), se_state(0), fw_state(0), st_state(0), sl_state(0), mission(EXPLORE_MISSION) {}
+ex_state(0), ob_state(0), se_state(0), fw_state(0), st_state(0), sl_state(0), wl_state(0), mission(EXPLORE_MISSION) {}
 
 
 SnailRunner::~SnailRunner(void) {
@@ -61,6 +61,7 @@ SnailRunner::~SnailRunner(void) {
 	delete fw_state;
 	delete st_state;
 	delete sl_state;
+	delete wl_state;
 }
 
 bool SnailRunner::construct(TxControllerSupervision* controller) {
@@ -70,7 +71,6 @@ bool SnailRunner::construct(TxControllerSupervision* controller) {
 	if (retvalue == true && distance.connect(INPUT_ULTRASONIC, controller) == false)
 		retvalue = false;
 
-
 	if (retvalue == true && colourSensorback.connect(INPUT_COLOUR_BACK, controller) == false)
 		retvalue = false;
 
@@ -79,7 +79,6 @@ bool SnailRunner::construct(TxControllerSupervision* controller) {
 
 	if (retvalue == true && accuLevel.connect(INPUT_ACCU_LEVEL, controller) == false)
 		retvalue = false;
-
 
 	if (retvalue == true && pushButton.connect(INPUT_PUSH_BUTTON, controller) == false)
 		retvalue = false;
@@ -109,16 +108,19 @@ bool SnailRunner::construct(TxControllerSupervision* controller) {
 	se_state = new SearchStateMachine(this);
 	st_state = new StartStateMachine(this);
 	sl_state = new StartLauferMachine(this);
+	wl_state = new WeiterLauferMachine(this);
 
 	/* --Interne Attribute setzen. */
-	speed = 250;
+	speed = 350;
 	last_colour_down = colourdown().value();
+	last_colour_back = colourback().value();
 	last_dis = ahead().value();
+
 
 	return retvalue;
 }
 
-bool SnailRunner::forward(double val, RunUnit unit) {
+bool SnailRunner::forward(double val, RunUnit unit) { 
 	return leftmotor.turnOn(val, unit, speed, LEFT, LEFT);
 }
 
@@ -137,9 +139,12 @@ bool SnailRunner::turnright(double val, RunUnit unit) {
 bool SnailRunner::stop() {
 	return leftmotor.turnOff();
 }
+
+
 void SnailRunner::turn(double grad) {
 	double val = 0;
 	RunUnit unit = IMPULSE;
+	grad = grad * direction;
 	if (grad > 0)
 	{
 		val = grad * grad_in_impulse * uebersetzungsverhaeltnis_getriebe * radUmdrehungproGrad;
@@ -150,7 +155,7 @@ void SnailRunner::turn(double grad) {
 		double grad_neu = abs(grad);
 		val = grad_neu * grad_in_impulse * uebersetzungsverhaeltnis_getriebe * radUmdrehungproGrad;
 		leftmotor.turnOn(val, unit, speed, LEFT, RIGHT); // wenn Drehwinkel <0 dann dreht links
-		cout << grad_neu << endl;
+		//cout << grad_neu << endl;
 	}
 	else
 	{
@@ -182,11 +187,16 @@ void SnailRunner::onMotorStopped(Bitfield bfield) {
 			fw_state->handle(ForwardStateMachine::Event::IS_STOPPED);
 		else if (mission == START_MISSION && SnailRunner::vergleich_ecke(SnailRunner::SollEcken) == false)
 			st_state->handle(StartStateMachine::Event::IS_STOPPED);
-		else if (mission == START_LAUFER_MISSION && SnailRunner::vergleich_runde(SnailRunner::SollRunde) == false)
+		else if (mission == START_LAUFER_MISSION)// && SnailRunner::vergleich_runde(SnailRunner::SollRunde) == false)
 		{
 			cout << "EVENT: IS_STOPPED" << endl;
-			sl_state->handle(StartLauferMachine::Event::IS_STOPPED);
-			
+			sl_state->handle(StartLauferMachine::Event::IS_STOPPED);		
+		}
+		else if (mission == WEITER_LAUFER_MISSION)
+		{
+			cout << "EVENT: IS_STOPPED" << endl;
+			wl_state->handle(WeiterLauferMachine::Event::IS_STOPPED);
+
 		}
 			
 }
@@ -219,13 +229,14 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_COLOR_GRAU_WEISS = 1300;
 	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 1600;
 	const int THRESHOLD_COLOR_BACK_MIN = 1000;
+	const int THRESHOLD_GRADIENT = 275;
 	//const int THRESHOLD_COLOR_BACK_MAX =
 
 
 	if (bfield&(1 << INPUT_COLOUR_DOWN)) {
 		int col = colourdown().value();
 		// --Überprüfe, ob Schwellenwert überschritten.
-		if (col > THRESHOLD_COLOR_GRAU_SCHWARZ && last_colour_down < THRESHOLD_COLOR_GRAU_SCHWARZ) {
+		if (col > threshold_grey_high && last_colour_down < threshold_grey_high) {
 			if (mission == EXPLORE_MISSION)
 				ex_state->handle(ExploreStateMachine::Event::OFF_TRAIL);
 			else if (mission == SEARCH_MISSION)
@@ -234,13 +245,22 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 				st_state->handle(StartStateMachine::Event::OFF_TRAIL);
 			else if (mission == START_LAUFER_MISSION)// && sl_state->state() != StartLauferMachine::State::AUSRICHTEN_3)
 			{
-				cout << "EVENT: OFF_TRAIL" << endl;
-				sl_state->handle(StartLauferMachine::Event::OFF_TRAIL);
+				//if (sl_state->state() == StartLauferMachine::State::SUCHEN || sl_state->state() == StartLauferMachine::State::ON_TRAIL)
+				//if ( abs((col - last_colour_down)) >= threshold_square_gradient)
+				{
+					cout << "EVENT: OFF_TRAIL" << endl;
+					sl_state->handle(StartLauferMachine::Event::OFF_TRAIL);
+				}
 			
+			}
+			else if (mission == WEITER_LAUFER_MISSION)
+			{
+				cout << "EVENT:OFF_TRAIL" << endl;
+				wl_state->handle(WeiterLauferMachine::Event::OFF_TRAIL);
 			}
 				
 		}
-		else if (col<THRESHOLD_COLOR_GRAU_WEISS && last_colour_down>THRESHOLD_COLOR_GRAU_WEISS) {
+		else if (col<threshold_grey_low && last_colour_down>threshold_grey_low) {
 			if (mission == EXPLORE_MISSION)
 				ex_state->handle(ExploreStateMachine::Event::ON_TRAIL);
 			else if (mission == FORWARD_MISSION)
@@ -249,13 +269,20 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 				st_state->handle(StartStateMachine::Event::ON_TRAIL);
 			else if (mission == START_LAUFER_MISSION)
 			{
+				//if (sl_state->state() == StartLauferMachine::State::AUSRICHTEN_3 || sl_state->state() == StartLauferMachine::State::CORRECT_TRAIL_LEFT || sl_state->state() == StartLauferMachine::State::CORRECT_TRAIL_RIGHT)
 				cout << "EVENT: ON_TRAIL" << endl;
 				sl_state->handle(StartLauferMachine::Event::ON_TRAIL);
 				
 			}
+			else if (mission == WEITER_LAUFER_MISSION)
+			{
+				cout << "EVENT: ON_TRAIL" << endl;
+				wl_state->handle(WeiterLauferMachine::Event::ON_TRAIL);
+
+			}
 				
 		}
-		else if (col  > THRESHOLD_COLOR_GRAU_WEISS && col < THRESHOLD_COLOR_GRAU_SCHWARZ) { // last_colour_down > THRESHOLD_COLOR_GRAU_SCHWARZ &&  col > THRESHOLD_COLOR_GRAU_WEISS && col < THRESHOLD_COLOR_GRAU_SCHWARZ
+		else if (col  > threshold_grey_low && col < threshold_grey_high ) { // last_colour_down > THRESHOLD_COLOR_GRAU_SCHWARZ &&  col > THRESHOLD_COLOR_GRAU_WEISS && col < THRESHOLD_COLOR_GRAU_SCHWARZ
 			if (mission == START_MISSION)
 			{
 				std::cout << "AUFGRAUAUFGRAUAUFGRAU" << std::endl;
@@ -263,37 +290,76 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			}
 			else if (mission == START_LAUFER_MISSION)
 			{
-				cout << "EVENT: ON_GREY" << endl;
-				sl_state->handle(StartLauferMachine::Event::ON_GREY);
+				//if (sl_state->state() == StartLauferMachine::State::SUCHEN || sl_state->state() == StartLauferMachine::State::ON_TRAIL || sl_state->state() == StartLauferMachine::State::AUSRICHTEN_2)
+				{
+					cout << "EVENT: ON_GREY" << endl;
+					sl_state->handle(StartLauferMachine::Event::ON_GREY);
+				}
 				
+			}
+			else if (mission == WEITER_LAUFER_MISSION)
+			{
+				cout << "EVENT: ON_GREY" << endl;
+				wl_state->handle(WeiterLauferMachine::Event::ON_GREY);
+
 			}
 
 		}
+
 		last_colour_down = col;
 		 
 	}
 	if (bfield&(1 << INPUT_COLOUR_BACK)) {
 		int col = colourback().value();
-		while (sl_state->state() == StartLauferMachine::State::READY)
+		//while (sl_state->state() == StartLauferMachine::State::READY)
+		if (mission == START_LAUFER_MISSION)
 		{
-			col = colourback().value();
-			WaitUntilIsOver(10);
-			if (col > THRESHOLD_COLOR_BACK_MIN)
+			
+				col = colourback().value();
+				//WaitUntilIsOver(10);
+				if (col > THRESHOLD_COLOR_BACK_MIN && last_colour_back < THRESHOLD_COLOR_BACK_MIN)
+				{
+					if (mission == START_LAUFER_MISSION)
+					{
+						if (sl_state->state() == StartLauferMachine::State::ENDE)
+						{
+							cout << "EVENT: LICHT_HINTEN" << endl;
+							sl_state->handle(StartLauferMachine::Event::LICHT_HINTEN);
+						}
+
+					}
+				}
+				if (col < THRESHOLD_COLOR_BACK_MIN && last_colour_back > THRESHOLD_COLOR_BACK_MIN)
+				{
+					if (mission == START_LAUFER_MISSION)
+					{
+						if (sl_state->state() == StartLauferMachine::State::ENDE)
+						{
+							cout << "EVENT: NOT_LICHT_HINTEN" << endl;
+							sl_state->handle(StartLauferMachine::Event::NOT_LICHT_HINTEN);
+						}
+						
+
+					}
+				}
+				last_colour_down = col;
+			
+		}
+		else if (mission == WEITER_LAUFER_MISSION)
+		{
+			if (wl_state->state() == WeiterLauferMachine::State::READY)
 			{
-				if (mission == START_LAUFER_MISSION)
+				col = colourback().value();
+				//WaitUntilIsOver(10);
+				if (col > THRESHOLD_COLOR_BACK_MIN)
 				{
 					cout << "EVENT: LICHT_HINTEN" << endl;
-					sl_state->handle(StartLauferMachine::Event::LICHT_HINTEN);
-					
+					wl_state->handle(WeiterLauferMachine::Event::LICHT_HINTEN);
 				}
-			}
-			if (col < THRESHOLD_COLOR_BACK_MIN)
-			{
-				if (mission == START_LAUFER_MISSION)
+				if (col < THRESHOLD_COLOR_BACK_MIN)
 				{
 					cout << "EVENT: NOT_LICHT_HINTEN" << endl;
-					sl_state->handle(StartLauferMachine::Event::NOT_LICHT_HINTEN);
-					
+					wl_state->handle(WeiterLauferMachine::Event::NOT_LICHT_HINTEN);
 				}
 			}
 		}
@@ -342,10 +408,11 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 
 			int dis = ahead().value();
 			//cout << "test0" << endl;
-			while (sl_state->state() == StartLauferMachine::State::START)
+			//while (sl_state->state() == StartLauferMachine::State::START)
+			//if (sl_state->state() == StartLauferMachine::State::START)
 			{
 				dis = ahead().value();
-				WaitUntilIsOver(10);
+				//WaitUntilIsOver(10);
 				//cout << "test1" << endl;
 				if (dis >= THRESHOLD_DISTANCE && last_dis < THRESHOLD_DISTANCE) {
 					cout << "EVENT: NOT_WALL_AHEAD" << endl;
@@ -356,6 +423,31 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 					cout << "WALL_AHEAD" << endl;
 					sl_state->handle(StartLauferMachine::Event::WALL_AHEAD);
 					
+				}
+
+			}
+			last_dis = dis;
+		}
+
+		else if (mission == WEITER_LAUFER_MISSION) {
+
+			int dis = ahead().value();
+			//cout << "test0" << endl;
+			//while (sl_state->state() == StartLauferMachine::State::START)
+			if (wl_state->state() == WeiterLauferMachine::State::START)
+			{
+				dis = ahead().value();
+				//WaitUntilIsOver(10);
+				//cout << "test1" << endl;
+				if (dis >= THRESHOLD_DISTANCE && last_dis < THRESHOLD_DISTANCE) {
+					cout << "EVENT: NOT_WALL_AHEAD" << endl;
+					wl_state->handle(WeiterLauferMachine::Event::NOT_WALL_AHEAD);
+
+				}
+				else if (dis < THRESHOLD_DISTANCE && last_dis >= THRESHOLD_DISTANCE) {
+					cout << "WALL_AHEAD" << endl;
+					wl_state->handle(WeiterLauferMachine::Event::WALL_AHEAD);
+
 				}
 
 			}
@@ -383,6 +475,8 @@ void SnailRunner::onStart() {
 		st_state->start();
 	else if (mission == START_LAUFER_MISSION)
 		sl_state->start();
+	else if (mission == WEITER_LAUFER_MISSION)
+		wl_state->start();
 }
 
 /*! Diese Methode wird beim Beenden des reaktiven Modus des Roboters ausgeführt.
@@ -400,7 +494,6 @@ bool SnailRunner::vergleich_ecke(int SollEcke) {
 	if (SollEcke == st_state->ecke_cnt())
 	{
 		st_state->handle(StartStateMachine::Event::ECKEN_CNT);
-
 		return true; 	
 	}
 	else
@@ -410,37 +503,10 @@ bool SnailRunner::vergleich_ecke(int SollEcke) {
 
 }
 
-bool SnailRunner::vergleich_runde(int SollRunde) {
-	if (sl_state->state() == StartLauferMachine::State::ON_ENDE)
-	{
-		while (sl_state->state() == StartLauferMachine::State::ON_ENDE)
-		{
+/* -- Funktion fuer StartLauferMachine -- */
 
-			if (SollRunde * 4 == sl_state->ecke_cnt())
-			{
-				cout << "EVENT: RUNDE_CNT" << endl;
-				sl_state->handle(StartLauferMachine::Event::RUNDE_CNT);
-				
-				return true;
-			}
-			else if (SollRunde * 4 != sl_state->ecke_cnt())
-			{
-				cout << "EVENT:NOT_RUNDE_CNT" << endl;
-				sl_state->handle(StartLauferMachine::Event::NOT_RUNDE_CNT);
-				
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	
-	}
-	else
-	{
-		return false;
-	}
-	
-	
-}
+
+
+
+/* -- Funktion fuer WeiterLauferMachine -- */
+

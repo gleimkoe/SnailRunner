@@ -130,7 +130,7 @@ void calibrationMenu(SnailRunner* robot)
         case 3: // calibration
         {
             unsigned color_choice = 0;
-            unsigned measurement_amount = 5;
+            int measurement_amount = 5;
             std::string dummy;
             std::vector<int> values;
             unsigned sum = 0;
@@ -372,14 +372,18 @@ void settingsMenu(SnailRunner* robot)
             std::cout << "[1] - im Uhrzeigersinn" << std::endl;
             std::cout << "[0] - gegen den Uhrzeigersinn" << std::endl;
 
-            std::cin >> robot->direction;
+			bool temp = 0;
 
-            if (robot->direction)
+            std::cin >> temp;
+
+            if (temp)
             {
+				robot->direction = 1;
                 std::cout << "Der Runner faehrt jetzt im Uhrzeigersinn" << std::endl;
             }
             else
             {
+				robot->direction = -1;
                 std::cout << "Der Runner faehrt jetzt gegen den Uhrzeigersinn" << std::endl;
             }
 
@@ -453,6 +457,21 @@ void settingsMenu(SnailRunner* robot)
 //
 /**********************************************************************************/
 
+
+//helperfunction to get timestamp
+/*
+void getTimeStamp()
+{
+	time_t now = time(nullptr);
+	tm* local_time = localtime_s(&now);
+
+	int hours = local_time->tm_hour;
+	int minutes = local_time->tm_min;
+	int seconds = local_time->tm_sec;
+
+	std::cout << hours << ":" << minutes << ":" << seconds;
+}
+*/
 // TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
 void logStartConditions(SnailRunner* robot)
 {
@@ -477,7 +496,8 @@ void logStartConditions(SnailRunner* robot)
         std::cout << "gegen den Uhrzeigersinn" << std::endl; // maybe right
     }
     std::cout << "Rundenanzahl:     " << robot->lap_amount << std::endl;
-    std::cout << "Startzeit:        "
+	std::cout << "Startzeit:        "
+	//getTimeStamp();
               << "11:45:50" << std::endl;
     std::cout << "*********************************" << std::endl
               << std::endl

@@ -48,6 +48,7 @@ Funktion 4: Logging
 #include <vector>
 #include <cstdio>
 #include "SnailRunner.h"
+#include <ctime>
 
 void calibrationMenu(SnailRunner* robot);
 void settingsMenu(SnailRunner* robot);

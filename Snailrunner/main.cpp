@@ -265,6 +265,7 @@ void menue() {
 			 << "[5] Kalibrierung \n"
 			 << "[6] Einstellungen\n"
 			 << "[7] Start Laufer Machine \n"
+			 << "[8] Weiter Laufer Machine \n"
 
 			 << "    --------------------------------\n"
 			 << "[Q] Quit"
@@ -379,6 +380,19 @@ void menue() {
 			runner->sollrunde_setzen(SollRunde);
 
 			cout << "Start Laufer Machine is running!!" << endl
+				<< "Enter 'OK' to stop: " << flush;
+			cin >> dummy;
+			StopSupervision();
+			break;
+		case '8':
+			int SollRunde_1;
+			cout << "Anzahl der Runden eingeben:";
+			cin >> SollRunde_1;
+			runner->activate(SnailRunner::WEITER_LAUFER_MISSION);
+			StartSupervision(runner);
+			runner->sollrunde_setzen(SollRunde_1);
+
+			cout << "Weiter Laufer Machine is running!!" << endl
 				<< "Enter 'OK' to stop: " << flush;
 			cin >> dummy;
 			StopSupervision();

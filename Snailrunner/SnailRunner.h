@@ -19,6 +19,7 @@
 #include "SearchStateMachine.h"
 #include "StartStateMachine.h"
 #include "StartLauferMachine.h"
+#include "WeiterLauferMachine.h"
 
 #include "WaitUntil.h"
 
@@ -29,7 +30,7 @@ public:
 	/*! Der Snail Runner unterstützt 2 Missionen:
 	 *  EXPLORE_MISSION   : Spurverfolgung
 	 *  OBSTACLE_MISSION : Fährt auf Wand zu, stoppt und dreht; dreimalige Wiederholung. */
-	enum Mission { EXPLORE_MISSION, OBSTACLE_MISSION, FORWARD_MISSION, SEARCH_MISSION, START_MISSION, START_LAUFER_MISSION };
+	enum Mission { EXPLORE_MISSION, OBSTACLE_MISSION, FORWARD_MISSION, SEARCH_MISSION, START_MISSION, START_LAUFER_MISSION, WEITER_LAUFER_MISSION };
 
 	/*! Diese Methode setzen die nächste Mission. */
 	void activate(Mission m) { mission=m; }
@@ -71,13 +72,17 @@ public:
 	void onStart();
 	void onStop();
 
-	/* -- Diese Funktion vergleicht den ecke-Wert mit dem eingegebenen Wert*/
+	/* -- Diese Funktion vergleicht den ecke-Wert mit dem eingegebenen Wert -- */
 	
 	bool vergleich_ecke(int SollEcken);
-	bool vergleich_runde(int SollRunde);
+
+	/* -- Funktion fuer StartLauferMachine -- */
 	void sollecken_setzen(int vorgabe) { SollEcken = vorgabe; }
 	void sollrunde_setzen(int vorgabe) { SollRunde = vorgabe; }
+	void runde_hochzaehlen() { aktuelle_Runde = aktuelle_Runde + 1; }
 
+	/* -- Funktion fuer WeiterLauferMachine -- */
+	
 
 	/******************************************************************************/
 	//
@@ -90,9 +95,9 @@ public:
 	int grey = 1400;
 
 	// threshold values Farbsensor unten
-	int threshold_grey_low = 1300;
+	int threshold_grey_low = 1400;
 	int threshold_grey_high = 1600;
-	int threshold_square_gradient = 420;
+	int threshold_square_gradient = 275;
 
 
 	/******************************************************************************/
@@ -105,9 +110,9 @@ public:
 	// false - follower
 	bool start_position;
 
-	// true - clockwise
-	// false - counterclockwise
-	bool direction = true;
+	//  1 - clockwise
+	// -1 - counterclockwise
+	int direction = 1;
 
 	// amount of laps
 	unsigned lap_amount = 1;
@@ -120,12 +125,13 @@ public:
 	unsigned current_lap = 1;
 	unsigned current_corner = 0;
 	unsigned offtrail_count = 0;
-
-
+	int aktuelle_Runde = 0;
+	int SollRunde = 0;
 private:
 
 	int SollEcken;
-	int SollRunde;
+	
+	
 
 	/*! Die Aktoren (Motoren und Lampen) des Roboters. */
 	IntelligentMotor leftmotor;
@@ -152,6 +158,7 @@ private:
 	double radUmdrehungproGrad = streckeRunnerimGrad / rad_umfang;
 	double grad_in_impulse = 75;
 	int speed;			/*! Geschwindigkeit der Roboters. */
+	int last_colour_back;
 	int last_colour_down;	/*! Letzter Farbwert; wird benötigt um Erreichen von Schwellenwert zu bestimmen. */
 	int last_dis;		/*! Letzter Distanzwert; dito. */
 
@@ -162,6 +169,7 @@ private:
 	SearchStateMachine* se_state;
 	StartStateMachine* st_state;
 	StartLauferMachine* sl_state;
+	WeiterLauferMachine* wl_state;
 
 	/*! Aktuelle Mission. */
 	Mission mission;

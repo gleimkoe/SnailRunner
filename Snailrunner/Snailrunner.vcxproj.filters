@@ -54,6 +54,9 @@
     <ClCompile Include="functions.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="WeiterLauferMachine.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExploreStateMachine.h">
@@ -222,6 +225,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="functions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="WeiterLauferMachine.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

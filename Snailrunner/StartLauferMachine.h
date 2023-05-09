@@ -4,14 +4,16 @@
 #include <map>
 #include <string>
 
+#include "WaitUntil.h"
+
 /* --Forward declaration. */
 class SnailRunner;
 
 class StartLauferMachine {
 public:
 
-	enum class State { FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, ON_ENDE, LAMPE_GRAY, ENDE, READY, READY_2, STOPPED, FINAL };
-	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, RUNDE_CNT, NOT_RUNDE_CNT, LICHT_HINTEN, NOT_LICHT_HINTEN };
+	enum class State { FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, RELAY, LAMPE_GRAY, ENDE, READY, FINAL };
+	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, LICHT_HINTEN, NOT_LICHT_HINTEN };
 
 	StartLauferMachine(SnailRunner* r);
 	/* --Returns the current state. */
@@ -24,15 +26,15 @@ public:
 	/* --Restart the state machine. */
 	void restart();
 	/* -- Return value of ecke -- */
-	int ecke_cnt() { return  ecke; }
-	int runde_cnt() { return runde; }
+	//int ecke_cnt() { return  ecke; }
+	//int runde_start_cnt() { return runde_start; }
 
 private:
 	State mystate;
 	SnailRunner* robot;
-	int count;
-	int ecke;
-	int runde;
+	int count = 0;
+	//int ecke = 0;
+	//int runde_start =0;
 
 	/* -- Methods called when entering a state. */
 	void onEnteringFailure();
@@ -47,10 +49,11 @@ private:
 	void onEnteringCorrectTrailRight(); // turn()
 	void onEnteringCorrectTrailLeft(); // turn()
 	void onEnteringLampeGray();
-	void onEnteringOnEnde();
+
+	void onEnteringRelay();
 	void onEnteringEnde();
 	void onEnteringReady();
-	void onEnteringReady_2();
+
 	void onEnteringFinal();
 
 	/* -- Methods called when leaving a state. */
@@ -66,10 +69,11 @@ private:
 	void onLeavingOffTrail();
 	void onLeavingFailure();
 	void onLeavingLampeGray();
-	void onLeavingOnEnde();
+
+	void onLeavingRelay();
 	void onLeavingEnde();
 	void onLeavingReady();
-	void onLeavingReady_2();
+
 
 	void onLeavingCorrectTrailLeft(); // stop
 	void onLeavingCorrectTrailRight();// stop
