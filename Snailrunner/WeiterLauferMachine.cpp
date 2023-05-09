@@ -210,9 +210,9 @@ void WeiterLauferMachine::transition(Event ev) {
 			break;
 		case WeiterLauferMachine::Event::OFF_TRAIL:
 			break;
-		case WeiterLauferMachine::Event::ON_TRAIL: 
+		case WeiterLauferMachine::Event::ON_TRAIL: onLeavingAusrichten_3(); onEnteringEnde();
 			break;
-		case WeiterLauferMachine::Event::IS_STOPPED: onLeavingAusrichten_3(); onEnteringEnde();
+		case WeiterLauferMachine::Event::IS_STOPPED: 
 			break;
 		case WeiterLauferMachine::Event::ON_GREY: onLeavingAusrichten_3(); onEnteringAusrichten_3();
 			break;

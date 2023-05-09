@@ -370,21 +370,22 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 		}
 		else if (mission == WEITER_LAUFER_MISSION)
 		{
-			if (wl_state->state() == WeiterLauferMachine::State::READY)
+
 			{
 				col = colourback().value();
 				//WaitUntilIsOver(10);
-				if (col > THRESHOLD_COLOR_BACK_MIN)
+				if (col > THRESHOLD_COLOR_BACK_MIN && last_colour_back < THRESHOLD_COLOR_BACK_MIN)
 				{
 					cout << "EVENT: LICHT_HINTEN" << endl;
 					wl_state->handle(WeiterLauferMachine::Event::LICHT_HINTEN);
 				}
-				if (col < THRESHOLD_COLOR_BACK_MIN)
+				if (col < THRESHOLD_COLOR_BACK_MIN && last_colour_back > THRESHOLD_COLOR_BACK_MIN)
 				{
 					cout << "EVENT: NOT_LICHT_HINTEN" << endl;
 					wl_state->handle(WeiterLauferMachine::Event::NOT_LICHT_HINTEN);
 				}
 			}
+			last_colour_back = col;
 		}
 		
 	}
