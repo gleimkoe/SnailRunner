@@ -196,7 +196,6 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default:onLeavingAusrichten_2(); onEnteringFailure();
-			break;
 		}
 		break;
 
@@ -220,7 +219,7 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default:onLeavingAusrichten_3(); onEnteringFailure();
-			break;
+			
 		}
 		break;
 
@@ -244,7 +243,6 @@ void StartLauferMachine::transition(Event ev) {
 				cout << "ON_TRAIL ZU RELAY" << endl;
 				onLeavingOnTrail(); onEnteringRelay();
 			}
-		
 			break;
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
@@ -349,7 +347,16 @@ void StartLauferMachine::transition(Event ev) {
 	case State::RELAY:
 		switch (ev)
 		{
-		case StartLauferMachine::Event::WALL_AHEAD:onLeavingRelay(); onEnteringLampeGray();
+		case StartLauferMachine::Event::WALL_AHEAD:
+			if (robot->current_lap == robot->lap_amount)
+			{
+				cout << "RUNDE_CNT" << endl;
+				onLeavingRelay(); onEnteringFinal();
+			}
+			else
+			{
+				onLeavingRelay(); onEnteringLampeGray();
+			}
 			break;
 		case StartLauferMachine::Event::NOT_WALL_AHEAD: 
 			break;
@@ -357,7 +364,7 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::ON_TRAIL:
 			break;
-		case StartLauferMachine::Event::IS_STOPPED: 
+		case StartLauferMachine::Event::IS_STOPPED:
 			break;
 		case StartLauferMachine::Event::ON_GREY:
 			break;
@@ -366,7 +373,6 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default:onLeavingRelay(); onEnteringFailure();
-			break;
 		}
 		break;
 
@@ -390,7 +396,6 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default: onEnteringFailure();
-			break;
 		}
 		break;
 
@@ -414,7 +419,7 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default: onEnteringFailure();
-			break;
+
 		}
 		break;
 
@@ -429,21 +434,15 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::ON_TRAIL:
 			break;
-		case StartLauferMachine::Event::IS_STOPPED: 
-			if (robot->aktuelle_Runde == robot->SollRunde)
-			{
-				cout << "IF_ENDE_DURRCHGEFUHRT" << endl;
-				onLeavingEnde(); onEnteringFinal();
-			}
+		case StartLauferMachine::Event::IS_STOPPED:
 			break;
 		case StartLauferMachine::Event::ON_GREY:
 			break;
-		case StartLauferMachine::Event::LICHT_HINTEN: onLeavingEnde(); onEnteringAusrichten_3();
+		case StartLauferMachine::Event::LICHT_HINTEN: onLeavingEnde(); onEnteringOnTrail();
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default:onLeavingEnde(); onEnteringFailure();
-			break;
 		}
 		break;
 
@@ -507,7 +506,7 @@ void StartLauferMachine::onEnteringAusrichten_2() { // turn(-180)
 
 void StartLauferMachine::onEnteringAusrichten_3() {
 	state(State::AUSRICHTEN_3);
-	robot->forward(1, METER);
+	robot->forward(0.5, METER);
 	robot->lampright().on();
 	cout << "Ausrichten_3" << endl;
 }
@@ -515,6 +514,7 @@ void StartLauferMachine::onEnteringAusrichten_3() {
 void StartLauferMachine::onEnteringOnTrail() {// forward
 	state(State::ON_TRAIL);
 	robot->forward(1, METER);
+	robot->lampright().on();
 	count = 1;
 	cout << "OnTrail" << endl;
 }
@@ -537,10 +537,16 @@ void StartLauferMachine::onEnteringCorrectTrailRight() { // turn()
 	if (count == 16)
 	{
 		robot->current_corner = robot->current_corner + 1;
+		if (robot->current_corner == 4)
+		{
+			robot->current_lap = robot->current_lap + 1;
+		}
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
 	}
 	robot->turn(count * -7.5);
-	
+
+
+
 	cout << "CorrectRight" << endl;
 }
 void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
@@ -549,17 +555,25 @@ void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 	if (count == 16)
 	{
 		robot->current_corner = robot->current_corner + 1;
-		cout << "Ecke Nr. : " << robot ->current_corner << endl;
+		if (robot->current_corner == 4)
+		{
+			robot->current_lap = robot->current_lap + 1;
+		}
+		cout << "Ecke Nr. : " << robot->current_corner << endl;
 	}
 
-	robot->turn(count * 7.5);	
+
+	robot->turn(count * 7.5);
 	cout << "CorrectLeft" << endl;
 }
 
 
 void StartLauferMachine::onEnteringFinal() {
 	state(State::FINAL);
-	robot->lampright().on();
+	robot->stop();
+	robot->lampright().off();
+	robot->lampfront().off();
+	robot->lampleft().on();
 	cout << "Final" << endl;
 }
 
@@ -567,10 +581,10 @@ void StartLauferMachine::onEnteringLampeGray() {
 	state(State::LAMPE_GRAY);
 	robot->stop();
 	robot->lampfront().on();
-	robot->runde_hochzaehlen();
+	//robot->runde_hochzaehlen();
 	robot ->current_corner = 0;
 	cout << "LampeGray" << endl;
-	cout << "Runde Nr: " << robot-> aktuelle_Runde << endl;
+	cout << "Runde Nr: " << robot-> current_lap << endl;
 	cout << "Staffel Übergabe" << endl;
 }
 
@@ -588,8 +602,9 @@ void StartLauferMachine::onEnteringReady() {
 
 void StartLauferMachine::onEnteringRelay() {
 	state(State::RELAY);
-	robot->forward(1,METER);
+	robot->forward(0.5,METER);
 	//robot->stop();
+	robot->current_corner = 0;
 	cout << "RELAY" << endl;
 }
 

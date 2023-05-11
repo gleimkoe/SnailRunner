@@ -185,7 +185,7 @@ void SnailRunner::onMotorStopped(Bitfield bfield) {
 			se_state->handle(SearchStateMachine::Event::IS_STOPPED);
 		else if (mission == FORWARD_MISSION)
 			fw_state->handle(ForwardStateMachine::Event::IS_STOPPED);
-		else if (mission == START_MISSION && SnailRunner::vergleich_ecke(SnailRunner::SollEcken) == false)
+		else if (mission == START_MISSION && SnailRunner::vergleich_ecke(SnailRunner::corner_amount) == false)
 			st_state->handle(StartStateMachine::Event::IS_STOPPED);
 		else if (mission == START_LAUFER_MISSION)// && SnailRunner::vergleich_runde(SnailRunner::SollRunde) == false)
 		{
@@ -314,22 +314,46 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			else if (mission == START_LAUFER_MISSION)
 			{
 				//if (sl_state->state() == StartLauferMachine::State::SUCHEN || sl_state->state() == StartLauferMachine::State::ON_TRAIL || sl_state->state() == StartLauferMachine::State::AUSRICHTEN_2)
+				//cout << "EVENT: ON_GREY" << endl;
+				//sl_state->handle(StartLauferMachine::Event::ON_GREY);							
+				if (sl_state->state() == StartLauferMachine::State::ON_TRAIL)
+				{
+					if (current_corner >= 4)
+					{
+						cout << "EVENT: ON_GREY" << endl;
+						sl_state->handle(StartLauferMachine::Event::ON_GREY);
+					}
+				}
+				else
 				{
 					cout << "EVENT: ON_GREY" << endl;
 					sl_state->handle(StartLauferMachine::Event::ON_GREY);
 				}
-				
 			}
 			else if (mission == WEITER_LAUFER_MISSION)
 			{
-				cout << "EVENT: ON_GREY" << endl;
-				wl_state->handle(WeiterLauferMachine::Event::ON_GREY);
-
+				if (wl_state->state() == WeiterLauferMachine::State::ON_TRAIL)
+				{
+					if (current_corner >= 4)
+					{
+						cout << "EVENT: ON_GREY" << endl;
+						wl_state->handle(WeiterLauferMachine::Event::ON_GREY);
+					}
+				}
+				else
+				{
+					cout << "EVENT: ON_GREY" << endl;
+					wl_state->handle(WeiterLauferMachine::Event::ON_GREY);	
+				}
+					
+			
 			}
 
 		}
 
 		last_colour_down = col;
+		last_last_colour_down = last_colour_down;
+
 		 
 	}
 	if (bfield&(1 << INPUT_COLOUR_BACK)) {
@@ -458,7 +482,6 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			int dis = ahead().value();
 			//cout << "test0" << endl;
 			//while (sl_state->state() == StartLauferMachine::State::START)
-			if (wl_state->state() == WeiterLauferMachine::State::START)
 			{
 				dis = ahead().value();
 				//WaitUntilIsOver(10);
@@ -514,8 +537,8 @@ void SnailRunner::onStop() {
 void SnailRunner::onCounterChanged(Bitfield /*bfield*/) {}
 
 /* -- Vergleich-Funktion -- */
-bool SnailRunner::vergleich_ecke(int SollEcke) {
-	if (SollEcke == st_state->ecke_cnt())
+bool SnailRunner::vergleich_ecke(int corner_amount) {
+	if (corner_amount == st_state->ecke_cnt())
 	{
 		st_state->handle(StartStateMachine::Event::ECKEN_CNT);
 		return true; 	

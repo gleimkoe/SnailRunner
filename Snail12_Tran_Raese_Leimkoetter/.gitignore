@@ -1,0 +1,5 @@
+#ignore .vs folder
+.vs/
+
+#ignore Dokumente folder
+Dokumente/
