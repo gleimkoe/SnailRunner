@@ -25,16 +25,11 @@ public:
 	void start();
 	/* --Restart the state machine. */
 	void restart();
-	/* -- Return value of ecke -- */
-	int ecke_cnt() { return  ecke; }
-	int runde_weiter_cnt() { return runde_weiter; }
 
 private:
 	State mystate;
 	SnailRunner* robot;
 	int count;
-	int ecke;
-	int runde_weiter;
 
 	/* -- Methods called when entering a state. */
 	void onEnteringFailure();

@@ -24,17 +24,13 @@ public:
 	/* --Start the state machine, set initial state. */
 	void start();
 	/* --Restart the state machine. */
-	void restart();
-	/* -- Return value of ecke -- */
-	//int ecke_cnt() { return  ecke; }
-	//int runde_start_cnt() { return runde_start; }
+	void restart();	
 
 private:
 	State mystate;
 	SnailRunner* robot;
 	int count = 0;
-	//int ecke = 0;
-	//int runde_start =0;
+
 
 	/* -- Methods called when entering a state. */
 	void onEnteringFailure();

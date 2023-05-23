@@ -459,19 +459,67 @@ void settingsMenu(SnailRunner* robot)
 
 
 //helperfunction to get timestamp
-/*
+
 void getTimeStamp()
 {
 	std::time_t now = time(nullptr);
-	tm* local_time = localtime_s(&now);
+	tm* local_time = localtime(&now);
 
-	int hours = local_time->tm_hour;
-	int minutes = local_time->tm_min;
-	int seconds = local_time->tm_sec;
+	int hours, minutes, seconds;
 
-	std::cout << hours << ":" << minutes << ":" << seconds;
+	hours = local_time->tm_hour;
+	minutes = local_time->tm_min;
+	seconds = local_time->tm_sec;
+
+	
+	if (hours > 9)
+	{
+		std::cout << hours << ":";
+	}
+	else
+	{
+		std::cout << "0" << hours << ":";
+	}
+
+	if (minutes > 9)
+	{
+		std::cout << minutes << ":";
+	}
+	else
+	{
+		std::cout << "0" << minutes << ":";
+	}
+	
+	if (seconds > 9)
+	{
+		std::cout << seconds;
+	}
+	else
+	{
+		std::cout << "0" << seconds;
+	}
 }
-*/
+
+
+//Methods to keep track of the track
+void resetDistance(SnailRunner* robot)
+{
+	robot->lapdistance = 0;
+}
+
+//gets called when back on state on_trail
+void resetEncoder(SnailRunner* robot)
+{
+	robot->left().encoder().clear();
+}
+
+//gets called when in state off_trail
+void addtoDistance(SnailRunner* robot)
+{
+	robot->lapdistance += robot->left().encoder().value();
+}
+
+
 // TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
 void logStartConditions(SnailRunner* robot)
 {
@@ -496,10 +544,9 @@ void logStartConditions(SnailRunner* robot)
         std::cout << "gegen den Uhrzeigersinn" << std::endl; // maybe right
     }
     std::cout << "Rundenanzahl:     " << robot->lap_amount << std::endl;
-	std::cout << "Startzeit:        "
-	//getTimeStamp();
-              << "11:45:50" << std::endl;
-    std::cout << "*********************************" << std::endl
+	std::cout << "Startzeit:        ";
+	getTimeStamp();
+    std::cout << "\n*********************************" << std::endl
               << std::endl
               << std::endl;
 }
@@ -515,16 +562,15 @@ void logLapBanner(SnailRunner* robot)
 // TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
 void logOFF_TRAIL(SnailRunner* robot)
 {
-    std::cout << "Abweichung	  "
-              << "11:45:56" << std::endl;
+	std::cout << "Abweichung	  "; getTimeStamp();
+              //<< "11:45:56" << std::endl;
 }
 
-// TODO - current_corner muss mit jeder Eckenerkennung um 1 inkrementiert werden, sollte aber nicht in der log-Funktion erfolgen
 // TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
 void logCorner(SnailRunner* robot)
 {
-    std::cout << robot->current_corner << ". Ecke           "
-              << "11:45:45" << std::endl;
+	std::cout << robot->current_corner << ". Ecke           "; getTimeStamp();
+              //<< "11:45:45" << std::endl;
 }
 
 // TODO - offtrail_count muss im state OFF_TRAIL oder so inkrementiert werden
@@ -538,13 +584,7 @@ void logLapConclusion(SnailRunner* robot)
               << "1 Min. 12 Sek." << std::endl;
     std::cout << "Abweichungen:     " << robot->offtrail_count << std::endl;
     std::cout << "Strecke:          "
-              << "2m 39cm" << std::endl
+              << ((1 / 75)*robot->lapdistance*M_PI*0.05 / 360) / 100 << std::endl
               << std::endl
               << std::endl;
 }
-/*
-time getCurrTime()
-{
-
-}
-*/

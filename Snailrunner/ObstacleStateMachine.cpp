@@ -5,19 +5,30 @@
 
 /* --Initialize State Description. */
 
+
+
 const std::map<ObstacleStateMachine::State, std::string> ObstacleStateMachine::StateDescription = {
 	{ State::FAILURE, "FAILURE" },
-	{ State::FORWARD, "FORWARD" },
-	{ State::OBSTACLE, "OBSTACLE" },
-	{ State::TURN, "TURN" },
-	{ State::STOPPING, "STOPPING" },
-	{ State::FINAL, "FINAL" }
+	{ State::ON_TRAIL, "ON_TRAIL" },
+	{ State::OBSTACLE_DETECTED, "OBSTACLE_DETECTED" },
+	{ State::EVASION_1, "EVASION_1" },
+	{ State::EVASION_2, "EVASION_2" },
+	{ State::EVASION_3, "EVASION_3" },
+	{ State::EVASION_4, "EVASION_4" },
+	{ State::EVASION_5, "EVASION_5" },
+	{State::EVASION_6, "EVASION_6"},
+	{ State::BACK_1, "BACK_1" },
+	{ State::BACK_2, "BACK_2" },
+	{ State::ALLIGN_1, "ALLIGN_1" },
+	{ State::ALLIGN_2, "ALLIGN_2" }
 };
 
 const std::map<ObstacleStateMachine::Event, std::string> ObstacleStateMachine::EventDescription = {
 	{ Event::IS_STOPPED, "IS_STOPPED" },
 	{ Event::WALL_AHEAD, "WALL_AHEAD" },
-	{ Event::CLEAR_VIEW, "CLEAR_VIEW" }
+	{ Event::CLEAR_VIEW, "CLEAR_VIEW" },
+	{Event::ON_TRAIL, "ON_TRAIL"},
+	{Event::NO_SIDEWALL, "NO_SIDEWALL"}
 };
 
 ObstacleStateMachine::ObstacleStateMachine(SnailRunner* r) :mystate(State::FAILURE), robot(r), count(0) {}
@@ -47,7 +58,7 @@ void ObstacleStateMachine::start() {
 	/* --Set everything to initial values. */
 	count = 0;
 	/* --Start with initial transition. */
-	onEnteringForward();
+	onEnteringOnTrail();
 }
 
 
@@ -79,50 +90,219 @@ void ObstacleStateMachine::handle(Event ev) {
 
 void ObstacleStateMachine::transition(Event ev) {
 	switch (mystate) {
-	case State::FORWARD:
-		switch (ev) {
-		case Event::IS_STOPPED: onLeavingForward(); onEnteringForward(); break;
-		case Event::WALL_AHEAD: onLeavingForward(); onEnteringObstacle(); break;
-		case Event::CLEAR_VIEW: break;
-		default: onLeavingForward(); onEnteringFailure();
-		}
-		break;
-	case State::OBSTACLE:
-		switch (ev) {
-		case Event::IS_STOPPED: onLeavingObstacle(); onEnteringTurn(); break;
-		case Event::WALL_AHEAD: break;
-		case Event::CLEAR_VIEW: break;
-		default: onLeavingObstacle(); onEnteringFailure();
-		}
-		break;
-	case State::TURN:
-		switch (ev) {
-		case Event::IS_STOPPED: onLeavingTurn(); onEnteringFinal(); break;
-		case Event::WALL_AHEAD: break;
-		case Event::CLEAR_VIEW: onLeavingTurn(); onEnteringStopping(); break;
-		default: onLeavingTurn(); onEnteringFailure();
-		}
-		break;
-	case State::STOPPING:
-		switch (ev) {
-		case Event::IS_STOPPED:
-			onLeavingStopping();
-			if (++count<3)
-				onEnteringForward();
-			else
-				onEnteringFinal();
+	case State::ON_TRAIL:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED:
 			break;
-		case Event::WALL_AHEAD: break;
-		case Event::CLEAR_VIEW: break;
-		default: onLeavingStopping(); onEnteringFailure();
+		case ObstacleStateMachine::Event::WALL_AHEAD: onLeavingOnTrail(); onEnteringObstacleDetected();
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingOnTrail(); onEnteringFailure();
 		}
 		break;
-	case State::FINAL:
-		switch (ev) {
-		case Event::IS_STOPPED: break;
-		case Event::WALL_AHEAD: break;
-		case Event::CLEAR_VIEW: break;
-		default:;
+
+	case State::OBSTACLE_DETECTED:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED: onLeavingObstacleDetected(); onEnteringEvasion1();
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingObstacleDetected(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::EVASION_1:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED:
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW: onLeavingEvasion1(); onEnteringEvasion2();
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingEvasion1(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::EVASION_2:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED: onLeavingEvasion2(); onEnteringEvasion3();
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingEvasion2(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::EVASION_3:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED: onLeavingEvasion3(); onEnteringEvasion4();
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingEvasion3(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::EVASION_4:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED: onLeavingEvasion4(); onEnteringEvasion5();
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingEvasion4(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::EVASION_5:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED:
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL: onLeavingEvasion5(); onEnteringEvasion6();
+			break;
+		default: onLeavingEvasion5(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::EVASION_6:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED: onLeavingEvasion6(); onEnteringBack1();
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingEvasion6(); onEnteringFailure();
+		
+		}
+		break;
+
+
+	case State::BACK_1:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED: onLeavingBack1(); onEnteringBack2();
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingBack1(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::BACK_2:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED:
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL: onLeavingBack2(); onEnteringAllign1();
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingBack2(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::ALLIGN_1:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED: onLeavingAllign1(); onEnteringAllign2();
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL:
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingAllign1(); onEnteringFailure();
+			
+		}
+		break;
+
+	case State::ALLIGN_2:
+		switch (ev)
+		{
+		case ObstacleStateMachine::Event::IS_STOPPED:
+			break;
+		case ObstacleStateMachine::Event::WALL_AHEAD:
+			break;
+		case ObstacleStateMachine::Event::CLEAR_VIEW:
+			break;
+		case ObstacleStateMachine::Event::ON_TRAIL: onLeavingAllign2(); onEnteringOnTrail();
+			break;
+		case ObstacleStateMachine::Event::NO_SIDEWALL:
+			break;
+		default: onLeavingAllign2(); onEnteringFailure();
+			
 		}
 		break;
 	default: state(State::FAILURE);
@@ -131,39 +311,119 @@ void ObstacleStateMachine::transition(Event ev) {
 
 void ObstacleStateMachine::onEnteringFailure() {
 	state(State::FAILURE);
-	robot->lampright().on();
-}
-
-void ObstacleStateMachine::onEnteringForward() {
-	state(State::FORWARD);
-	robot->forward(1, METER);
-}
-
-void ObstacleStateMachine::onEnteringObstacle() {
-	state(State::OBSTACLE);
+	robot->stop();
 	robot->lampleft().on();
+}
+
+void ObstacleStateMachine::onEnteringOnTrail() {
+	state(State::ON_TRAIL);
+	cout << "ON_TRAIL" << endl;
+	robot->forward(1, METER);
+	count = 1;
+
+}
+
+void ObstacleStateMachine::onEnteringObstacleDetected() {
+	state(State::OBSTACLE_DETECTED);
+	robot->stop();
+	cout << "OBSTACLE_DETECTED" << endl;
+}
+
+void ObstacleStateMachine::onEnteringEvasion1() {
+	state(State::EVASION_1);
+	robot->turn(90);
+	cout << "EVASION_1" << endl;
+}
+
+void ObstacleStateMachine::onEnteringEvasion2() {
+	state(State::EVASION_2);
+	robot->turn(40); // muss noch mal anpassen!!!
+	cout << "EVASION_2" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringEvasion3() {
+	state(State::EVASION_3);
+	robot->forward(0.3, METER);
+	cout << "EVASION_3" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringEvasion4() {
+	state(State::EVASION_4);
+	robot->turn(-70);
+	cout << "EVASION_4" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringEvasion5() {
+	state(State::EVASION_5);
+	robot->forward(1, METER);
+	cout << "EVASION_5" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringEvasion6() {
+	state(State::EVASION_6);
+	robot->forward(0.05, METER);
+	cout << "EVASION_6" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringBack1() {
+	state(State::BACK_1);
+	robot->turn(-70);
+	cout << "BACK_1" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringBack2() {
+	state(State::BACK_2);
+	robot->forward(1, METER);
+	cout << "BACK_2" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringAllign1() {
+	state(State::ALLIGN_1);
+	robot->forward(0.1, METER);
+	cout << "ALLIGN_1" << endl;
+
+}
+
+void ObstacleStateMachine::onEnteringAllign2() {
+	state(State::ALLIGN_2);
+	robot->turn(180);
+	cout << "ALLIGN_2" << endl;
+
+}
+
+void ObstacleStateMachine::onLeavingOnTrail() {}
+
+void ObstacleStateMachine::onLeavingObstacleDetected() {}
+
+void ObstacleStateMachine::onLeavingEvasion1() {
 	robot->stop();
 }
 
-void ObstacleStateMachine::onEnteringTurn() {
-	state(State::TURN);
-	robot->turnleft(3, ROTATION);
-}
+void ObstacleStateMachine::onLeavingEvasion2() {}
 
-void ObstacleStateMachine::onEnteringStopping() {
-	state(State::STOPPING);
-	robot->lampleft().off();
+void ObstacleStateMachine::onLeavingEvasion3() {}
+
+void ObstacleStateMachine::onLeavingEvasion4() {}
+
+void ObstacleStateMachine::onLeavingEvasion5() {
 	robot->stop();
 }
 
-void ObstacleStateMachine::onEnteringFinal() {
-	state(State::FINAL);
-	robot->lampfront().on();
-}
+void ObstacleStateMachine::onLeavingEvasion6() {}
 
-void ObstacleStateMachine::onLeavingFailure() {}
-void ObstacleStateMachine::onLeavingForward() {}
-void ObstacleStateMachine::onLeavingObstacle() {}
-void ObstacleStateMachine::onLeavingTurn() {}
-void ObstacleStateMachine::onLeavingStopping() {}
+void ObstacleStateMachine::onLeavingBack1() {}
+
+void ObstacleStateMachine::onLeavingBack2() {}
+
+void ObstacleStateMachine::onLeavingAllign1() {}
+
+void ObstacleStateMachine::onLeavingAllign2() {}
+
 

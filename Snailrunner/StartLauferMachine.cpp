@@ -3,8 +3,6 @@
 
 /* --Initialize State Description. */
 
-
-
 const std::map<StartLauferMachine::State, std::string> StartLauferMachine::StateDescription = {
 	{ State::FAILURE, "FAILURE" },
 	{ State::START, "START" },
@@ -17,7 +15,6 @@ const std::map<StartLauferMachine::State, std::string> StartLauferMachine::State
 	{ State::ON_TRAIL, "ON_TRAIL" },
 	{ State::OFF_TRAIL, "OFF_TRAIL" },
 	{ State::STOPPING, "STOPPING" },
-	
 	{ State::RELAY, "RELAY" },
 	{ State::LAMPE_GRAY, "LAMPE_GRAY" },
 	{ State::ENDE, "ENDE" },
@@ -28,7 +25,6 @@ const std::map<StartLauferMachine::State, std::string> StartLauferMachine::State
 	/* --INFO: Here you should add new states for debugging purpose. */
 };
 
-
 const std::map<StartLauferMachine::Event, std::string> StartLauferMachine::EventDescription = {
 		
 	{ Event::WALL_AHEAD, "WALL_AHEAD" },
@@ -36,7 +32,6 @@ const std::map<StartLauferMachine::Event, std::string> StartLauferMachine::Event
 	{ Event::OFF_TRAIL, "OFF_TRAIL" },
 	{ Event::ON_TRAIL, "ON_TRAIL" },
 	{ Event::IS_STOPPED, "IS_STOPPED" },
-
 	{ Event::ON_GREY, "ON_GREY" },
 	{Event::LICHT_HINTEN, "LICHT_HINTEN"},
 	{Event::NOT_LICHT_HINTEN, "NOT_LICHT_HINTEN"}
@@ -72,8 +67,7 @@ void StartLauferMachine::start() {
 	robot->controller()->annotate("RE/START START STATE MACHINE");
 	/* --Set everything to initial values. */
 	count = 1;
-	//ecke = 0;
-	//runde_start = 0;
+
 	/* --Start with initial transition. */
 	onEnteringStart();
 	/* --INFO: Here you can change/add initial values when state machine is started. */
@@ -419,7 +413,6 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default: onEnteringFailure();
-
 		}
 		break;
 
@@ -482,6 +475,7 @@ void StartLauferMachine::onEnteringFailure() {
 void StartLauferMachine::onEnteringStart() { // wait
 	state(State::START);
 	cout << "Start" << endl;
+	logStartConditions(robot);
 }
 
 void StartLauferMachine::onEnteringSuchen() { //forward 
@@ -494,7 +488,6 @@ void StartLauferMachine::onEnteringSuchen() { //forward
 void StartLauferMachine::onEnteringAusrichten() { // forward(10cm)
 	state(State::AUSRICHTEN);
 	robot->forward(0.1, METER);
-
 	cout << "Ausrichten" << endl;
 }
 
@@ -528,7 +521,6 @@ void StartLauferMachine::onEnteringOffTrail() {// stop
 void StartLauferMachine::onEnteringStopping() {// ecken_cnt()
 	state(State::STOPPING);
 	cout << "Stopping" << endl;
-
 }
 
 void StartLauferMachine::onEnteringCorrectTrailRight() { // turn()
@@ -544,11 +536,9 @@ void StartLauferMachine::onEnteringCorrectTrailRight() { // turn()
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
 	}
 	robot->turn(count * -7.5);
-
-
-
 	cout << "CorrectRight" << endl;
 }
+
 void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 	state(State::CORRECT_TRAIL_LEFT);
 	count *= 2;
@@ -562,11 +552,9 @@ void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
 	}
 
-
 	robot->turn(count * 7.5);
 	cout << "CorrectLeft" << endl;
 }
-
 
 void StartLauferMachine::onEnteringFinal() {
 	state(State::FINAL);
@@ -581,7 +569,6 @@ void StartLauferMachine::onEnteringLampeGray() {
 	state(State::LAMPE_GRAY);
 	robot->stop();
 	robot->lampfront().on();
-	//robot->runde_hochzaehlen();
 	robot ->current_corner = 0;
 	cout << "LampeGray" << endl;
 	cout << "Runde Nr: " << robot-> current_lap << endl;
@@ -592,13 +579,9 @@ void StartLauferMachine::onEnteringReady() {
 	state(State::READY);
 	robot->lampfront().off();
 	robot->lampright().off();
-	robot->forward(1, METER);
-	//WaitUntilIsOver(1500);
-	
+	robot->forward(1, METER);	
 	cout << "Ready" << endl;
 }
-
-
 
 void StartLauferMachine::onEnteringRelay() {
 	state(State::RELAY);
@@ -611,27 +594,21 @@ void StartLauferMachine::onEnteringRelay() {
 void StartLauferMachine::onEnteringEnde() {
 	state(State::ENDE);
 	robot->stop();
-	//robot->forward(0.2, METER);
-	
-	//robot->lampright().off();
-	//robot->lampfront().off();
+
 	cout << "Ende" << endl;
 }
 
-
-
-
-
 void StartLauferMachine::onLeavingAusrichten() {} // Stop
-	//robot->stop();
-
+	
 void StartLauferMachine::onLeavingAusrichten_2() {
 	robot->stop();
 	cout << "AUSRICHTEN_2 STOP" << endl;
 }
 
 void StartLauferMachine::onLeavingAusrichten_3() {}
+
 void StartLauferMachine::onLeavingOnTrail() {}
+
 void StartLauferMachine::onLeavingStopping() {}
 
 void StartLauferMachine::onLeavingOffTrail() {
@@ -649,21 +626,16 @@ void StartLauferMachine::onLeavingCorrectTrailRight() {// stop
 void StartLauferMachine::onLeavingFinal() {}
 
 void StartLauferMachine::onLeavingStart() {}
-void StartLauferMachine::onLeavingSuchen() { // Stop
+
+void StartLauferMachine::onLeavingSuchen(){ // Stop
 	robot->stop();
 }
 
-void StartLauferMachine::onLeavingLampeGray() {
-	
-}
-
+void StartLauferMachine::onLeavingLampeGray() {}
 
 void StartLauferMachine::onLeavingRelay(){}
 
 void StartLauferMachine::onLeavingEnde() {}
 
-void StartLauferMachine::onLeavingReady() {
-	//robot->forward(0.2, METER);
-	//WaitUntilIsOver(1200);
-}
+void StartLauferMachine::onLeavingReady() {}
 

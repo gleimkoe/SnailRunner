@@ -52,10 +52,13 @@ Funktion 4: Logging
 
 void calibrationMenu(SnailRunner* robot);
 void settingsMenu(SnailRunner* robot);
+
 void logStartConditions(SnailRunner* robot);
 void logLapBanner(SnailRunner* robot);
 void logOFF_TRAIL(SnailRunner* robot);
 void logCorner(SnailRunner* robot);
 void logLapConclusion(SnailRunner* robot);
 
+void addtoDistance(SnailRunner* robot);
+void getTimeStamp();
 #endif

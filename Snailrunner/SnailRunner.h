@@ -59,6 +59,7 @@ public:
 	Colour& colourback() { return colourSensorback; }
 	Colour& colourdown() { return colourSensordown; }
 	Distance& ahead() { return distance; }
+	Distance& side() { return distance_side; }
 	Lamp& lampfront() { return lamp_front; }
 	Lamp& lampright() { return lamp_right; }
 	Lamp& lampleft() { return lamp_left; }
@@ -150,6 +151,7 @@ private:
 	Colour colourSensorback;
 	Colour colourSensordown;		
 	Distance distance;
+	Distance distance_side;
 	Sensor accuLevel;
 	Button pushButton;
 
@@ -167,6 +169,7 @@ private:
 	int last_colour_down;	/*! Letzter Farbwert; wird benötigt um Erreichen von Schwellenwert zu bestimmen. */
 	int last_last_colour_down = 0;
 	int last_dis;		/*! Letzter Distanzwert; dito. */
+	int last_dis_side; // Letzter Distanz rechter Sensor
 
 	/*! Zustandsmaschinen für die einzelnen Missionen. */
 	ExploreStateMachine* ex_state;

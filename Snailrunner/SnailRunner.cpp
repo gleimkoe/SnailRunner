@@ -26,6 +26,8 @@
 #define INPUT_PUSH_BUTTON				I7
 #define INPUT_ACCU_LEVEL				I8
 
+#define INPUT_ULTRASONIC_SIDE          I7 
+
 #define COUNTER_RIGHT_MOTOR				C1
 #define COUNTER_LEFT_MOTOR				C2
 
@@ -42,6 +44,7 @@
 #define INFO_COLOUR_BACK	"COLOUR|BACK"
 #define INFO_COLOUR_DOWN	"COLOUR|FRONT, DOWN"
 #define INFO_DISTANCE		"DISTANCE|AHEAD"
+#define INFO_DISTANCE_SIDE	"DISTANCE|SIDE"
 #define INFO_ACCU_LEVEL		"ANALOG|POWER SUPPLY, ACCU LEVEL"
 #define INFO_BUTTON			"BUTTON|PUSH BUTTON, RIGHT"
 
@@ -49,6 +52,7 @@ SnailRunner::SnailRunner() : leftmotor(INFO_MOTOR_LEFT), rightmotor(INFO_MOTOR_R
 colourSensorback(INFO_COLOUR_BACK),
 colourSensordown(INFO_COLOUR_DOWN),
 distance(INFO_DISTANCE),
+distance_side(INFO_DISTANCE_SIDE),
 accuLevel(ANALOG_10KV, I1, INFO_ACCU_LEVEL),
 pushButton(INFO_BUTTON),
 ex_state(0), ob_state(0), se_state(0), fw_state(0), st_state(0), sl_state(0), wl_state(0), mission(EXPLORE_MISSION) {}
@@ -81,6 +85,9 @@ bool SnailRunner::construct(TxControllerSupervision* controller) {
 		retvalue = false;
 
 	if (retvalue == true && pushButton.connect(INPUT_PUSH_BUTTON, controller) == false)
+		retvalue = false;
+	
+	if (retvalue == true && distance_side.connect(INPUT_ULTRASONIC_SIDE, controller) == false)
 		retvalue = false;
 
 	/* --Aktoren konfigurieren. */
@@ -226,6 +233,7 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_DISTANCE_LOW = 30;
 	const int THRESHOLD_DISTANCE_HIGH = 40;
 	const int THRESHOLD_DISTANCE = 10;
+	const int THRESHOLD_DISTANCE_SIDE = 30;
 	const int THRESHOLD_COLOR_GRAU_WEISS = 1300;
 	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 1600;
 	const int THRESHOLD_COLOR_BACK_MIN = 1000;
@@ -263,6 +271,8 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 				ex_state->handle(ExploreStateMachine::Event::OFF_TRAIL);
 			else if (mission == SEARCH_MISSION)
 				se_state->handle(SearchStateMachine::Event::ON_TRAIL);
+			else if (mission == OBSTACLE_MISSION)
+				ob_state->handle(ObstacleStateMachine::Event::ON_TRAIL);
 			else if (mission == START_MISSION) //&& st_state->state() != StartStateMachine::State::AUSRICHTEN_3)
 				st_state->handle(StartStateMachine::Event::OFF_TRAIL);
 			else if (mission == START_LAUFER_MISSION)// && sl_state->state() != StartLauferMachine::State::AUSRICHTEN_3)
@@ -499,6 +509,17 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 
 			}
 			last_dis = dis;
+		}
+	}
+	if (bfield&(1 << INPUT_ULTRASONIC_SIDE)) {
+		if (mission == OBSTACLE_MISSION) {
+			// --Überprüfe, ob Schwellwert überschritten.
+			int dis_side = side().value();
+
+			if (dis_side >= THRESHOLD_DISTANCE_SIDE && last_dis_side < THRESHOLD_DISTANCE_SIDE) {
+				ob_state->handle(ObstacleStateMachine::Event::NO_SIDEWALL);
+			}
+			last_dis_side = dis_side;
 		}
 	}
 }

@@ -3,8 +3,6 @@
 
 /* --Initialize State Description. */
 
-
-
 const std::map<WeiterLauferMachine::State, std::string> WeiterLauferMachine::StateDescription = {
 	{ State::FAILURE, "FAILURE" },
 	{ State::START, "START" },
@@ -73,8 +71,6 @@ void WeiterLauferMachine::start() {
 	robot->controller()->annotate("RE/START START STATE MACHINE");
 	/* --Set everything to initial values. */
 	count = 1;
-	ecke = 0;
-	runde_weiter = 0;
 	/* --Start with initial transition. */
 	onEnteringStart();
 	/* --INFO: Here you can change/add initial values when state machine is started. */
@@ -243,7 +239,6 @@ void WeiterLauferMachine::transition(Event ev) {
 				cout << "ON_TRAIL ZU RELAY" << endl;
 				onLeavingOnTrail(); onEnteringRelay();
 			}
-
 			break;
 		case WeiterLauferMachine::Event::LICHT_HINTEN:
 			break;
@@ -358,7 +353,6 @@ void WeiterLauferMachine::transition(Event ev) {
 			{
 				onLeavingRelay(); onEnteringLampeGray();
 			}
-			
 			break;
 		case WeiterLauferMachine::Event::NOT_WALL_AHEAD:
 			break;
@@ -367,7 +361,6 @@ void WeiterLauferMachine::transition(Event ev) {
 		case WeiterLauferMachine::Event::ON_TRAIL:
 			break;
 		case WeiterLauferMachine::Event::IS_STOPPED:
-			
 			break;
 		case WeiterLauferMachine::Event::ON_GREY:
 			break;
@@ -399,7 +392,6 @@ void WeiterLauferMachine::transition(Event ev) {
 		case WeiterLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default: onEnteringFailure();
-			
 		}
 		break;
 
@@ -423,7 +415,6 @@ void WeiterLauferMachine::transition(Event ev) {
 		case WeiterLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default:onLeavingReady(); onEnteringFailure();
-
 		}
 		break;
 
@@ -447,7 +438,6 @@ void WeiterLauferMachine::transition(Event ev) {
 		case WeiterLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		default:onLeavingEnde(); onEnteringFailure();
-		
 		}
 		break;
 
@@ -533,7 +523,6 @@ void WeiterLauferMachine::onEnteringOffTrail() {// stop
 void WeiterLauferMachine::onEnteringStopping() {// ecken_cnt()
 	state(State::STOPPING);
 	cout << "Stopping" << endl;
-
 }
 
 void WeiterLauferMachine::onEnteringCorrectTrailRight() { // turn()
@@ -549,11 +538,9 @@ void WeiterLauferMachine::onEnteringCorrectTrailRight() { // turn()
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
 	}
 	robot->turn(count * -7.5);
-	
-
-
 	cout << "CorrectRight" << endl;
 }
+
 void WeiterLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 	state(State::CORRECT_TRAIL_LEFT);
 	count *= 2;
@@ -566,12 +553,10 @@ void WeiterLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 		}
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
 	}
-	
 
 	robot->turn(count * 7.5);
 	cout << "CorrectLeft" << endl;
 }
-
 
 void WeiterLauferMachine::onEnteringFinal() {
 	state(State::FINAL);
@@ -586,7 +571,6 @@ void WeiterLauferMachine::onEnteringLampeGray() {
 	state(State::LAMPE_GRAY);
 	robot->stop();
 	robot->lampfront().on();
-	//robot->runde_hochzaehlen();
 	robot->current_corner = 0;
 	cout << "LampeGray" << endl;
 	cout << "Runde Nr: " << robot->current_lap << endl;
@@ -598,35 +582,21 @@ void WeiterLauferMachine::onEnteringReady() {
 	robot->lampfront().off();
 	robot->lampright().off();
 	robot->forward(1, METER);
-	//WaitUntilIsOver(1500);
-
 	cout << "Ready" << endl;
 }
-
-
 
 void WeiterLauferMachine::onEnteringRelay() {
 	state(State::RELAY);
 	robot->forward(0.5, METER);
-	//robot->runde_hochzaehlen();
 	robot->current_corner = 0;
-	//robot->stop();
 	cout << "RELAY" << endl;
 }
 
 void WeiterLauferMachine::onEnteringEnde() {
 	state(State::ENDE);
 	robot->stop();
-	//robot->forward(0.2, METER);
-
-	//robot->lampright().off();
-	//robot->lampfront().off();
 	cout << "Ende" << endl;
 }
-
-
-
-
 
 void WeiterLauferMachine::onLeavingAusrichten() {} // Stop
 	//robot->stop();
@@ -665,12 +635,8 @@ void WeiterLauferMachine::onLeavingLampeGray() {
 
 }
 
-
 void WeiterLauferMachine::onLeavingRelay() {}
 
 void WeiterLauferMachine::onLeavingEnde() {}
 
-void WeiterLauferMachine::onLeavingReady() {
-	//robot->forward(0.2, METER);
-	//WaitUntilIsOver(1200);
-}
+void WeiterLauferMachine::onLeavingReady() {}
