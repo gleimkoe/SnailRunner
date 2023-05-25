@@ -12,8 +12,8 @@ class SnailRunner;
 class StartLauferMachine {
 public:
 
-	enum class State { FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, RELAY, LAMPE_GRAY, ENDE, READY, FINAL };
-	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, LICHT_HINTEN, NOT_LICHT_HINTEN };
+	enum class State { FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, RELAY, LAMPE_GRAY, ENDE, READY, OBSTACLE_DETECTED, EVASION_1, EVASION_2, EVASION_3, EVASION_4, EVASION_5, EVASION_6, BACK_1, BACK_2, ALLIGN_1, ALLIGN_2, FINAL };
+	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, LICHT_HINTEN, NOT_LICHT_HINTEN, NO_SIDEWALL };
 
 	StartLauferMachine(SnailRunner* r);
 	/* --Returns the current state. */
@@ -50,6 +50,18 @@ private:
 	void onEnteringEnde();
 	void onEnteringReady();
 
+	void onEnteringObstacleDetected();
+	void onEnteringEvasion1();
+	void onEnteringEvasion2();
+	void onEnteringEvasion3();
+	void onEnteringEvasion4();
+	void onEnteringEvasion5();
+	void onEnteringEvasion6();
+	void onEnteringBack1();
+	void onEnteringBack2();
+	void onEnteringAllign1();
+	void onEnteringAllign2();
+
 	void onEnteringFinal();
 
 	/* -- Methods called when leaving a state. */
@@ -73,6 +85,19 @@ private:
 
 	void onLeavingCorrectTrailLeft(); // stop
 	void onLeavingCorrectTrailRight();// stop
+
+	void onLeavingObstacleDetected();
+	void onLeavingEvasion1();
+	void onLeavingEvasion2();
+	void onLeavingEvasion3();
+	void onLeavingEvasion4();
+	void onLeavingEvasion5();
+	void onLeavingEvasion6();
+	void onLeavingBack1();
+	void onLeavingBack2();
+	void onLeavingAllign1();
+	void onLeavingAllign2();
+
 	void onLeavingFinal();
 
 	/* --Sets the state explicitly. */

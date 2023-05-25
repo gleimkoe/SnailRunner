@@ -110,7 +110,7 @@ public:
 
 	// true - starter
 	// false - follower
-	bool start_position;
+	bool start_position = true;
 
 	//  1 - clockwise
 	// -1 - counterclockwise
@@ -129,6 +129,8 @@ public:
 	int current_lap = 0; // aktuelle_Runde
 	int current_corner = 0;
 	int offtrail_count = 0;
+
+	double lapdistance = 0;
 
 	//int aktuelle_Runde = 0;
 	//int SollRunde = 0;

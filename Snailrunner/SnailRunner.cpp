@@ -26,7 +26,7 @@
 #define INPUT_PUSH_BUTTON				I7
 #define INPUT_ACCU_LEVEL				I8
 
-#define INPUT_ULTRASONIC_SIDE          I7 
+#define INPUT_ULTRASONIC_SIDE			I7 
 
 #define COUNTER_RIGHT_MOTOR				C1
 #define COUNTER_LEFT_MOTOR				C2
@@ -518,6 +518,15 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 
 			if (dis_side >= THRESHOLD_DISTANCE_SIDE && last_dis_side < THRESHOLD_DISTANCE_SIDE) {
 				ob_state->handle(ObstacleStateMachine::Event::NO_SIDEWALL);
+			}
+			last_dis_side = dis_side;
+		}
+		if (mission == START_LAUFER_MISSION) {
+			// --Überprüfe, ob Schwellwert überschritten.
+			int dis_side = side().value();
+
+			if (dis_side >= THRESHOLD_DISTANCE_SIDE && last_dis_side < THRESHOLD_DISTANCE_SIDE) {
+				sl_state->handle(StartLauferMachine::Event::NO_SIDEWALL);
 			}
 			last_dis_side = dis_side;
 		}
