@@ -2,8 +2,9 @@
 #include "SnailRunner.h"
 #include "functions.h"
 
-/* --Initialize State Description. */
+std::ofstream file("LogDatei.txt");
 
+/* --Initialize State Description. */
 const std::map<StartLauferMachine::State, std::string> StartLauferMachine::StateDescription = {
 	{ State::FAILURE, "FAILURE" },
 	{ State::START, "START" },
@@ -19,20 +20,18 @@ const std::map<StartLauferMachine::State, std::string> StartLauferMachine::State
 	{ State::RELAY, "RELAY" },
 	{ State::LAMPE_GRAY, "LAMPE_GRAY" },
 	{ State::ENDE, "ENDE" },
-	{State::READY, "READY"},
+	{ State::READY, "READY"},
 	{ State::OBSTACLE_DETECTED, "OBSTACLE_DETECTED" },
 	{ State::EVASION_1, "EVASION_1" },
 	{ State::EVASION_2, "EVASION_2" },
 	{ State::EVASION_3, "EVASION_3" },
 	{ State::EVASION_4, "EVASION_4" },
 	{ State::EVASION_5, "EVASION_5" },
-	{State::EVASION_6, "EVASION_6"},
+	{ State::EVASION_6, "EVASION_6"},
 	{ State::BACK_1, "BACK_1" },
 	{ State::BACK_2, "BACK_2" },
 	{ State::ALLIGN_1, "ALLIGN_1" },
 	{ State::ALLIGN_2, "ALLIGN_2" },
-	
-	
 	{ State::FINAL, "FINAL" }
 	/* --INFO: Here you should add new states for debugging purpose. */
 };
@@ -45,9 +44,9 @@ const std::map<StartLauferMachine::Event, std::string> StartLauferMachine::Event
 	{ Event::ON_TRAIL, "ON_TRAIL" },
 	{ Event::IS_STOPPED, "IS_STOPPED" },
 	{ Event::ON_GREY, "ON_GREY" },
-	{Event::LICHT_HINTEN, "LICHT_HINTEN"},
-	{Event::NOT_LICHT_HINTEN, "NOT_LICHT_HINTEN"},
-	{Event::NO_SIDEWALL, "NO_SIDEWALL"}
+	{ Event::LICHT_HINTEN, "LICHT_HINTEN"},
+	{ Event::NOT_LICHT_HINTEN, "NOT_LICHT_HINTEN"},
+	{ Event::NO_SIDEWALL, "NO_SIDEWALL"}
 	
 	/* --INFO: Here you should add new events for debugging purpose. */
 };
@@ -84,6 +83,7 @@ void StartLauferMachine::start() {
 	/* --Start with initial transition. */
 	onEnteringStart();
 	/* --INFO: Here you can change/add initial values when state machine is started. */
+
 }
 
 void StartLauferMachine::restart() {
@@ -230,7 +230,7 @@ void StartLauferMachine::transition(Event ev) {
 			}
 			else
 			{
-				onLeavingAusrichten_3(); onEnteringOnTrail(); logLapBanner(robot);
+				onLeavingAusrichten_3(); onEnteringOnTrail(); logLapBanner(robot, file);
 			}
 			break;
 		case StartLauferMachine::Event::IS_STOPPED:
@@ -390,7 +390,7 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::WALL_AHEAD:
 			if (robot->current_lap == robot->lap_amount)
 			{
-				logLapConclusion(robot);
+				logLapConclusion(robot, file);
 				cout << "RUNDE_CNT" << endl;
 				onLeavingRelay(); onEnteringFinal();
 			}
@@ -484,7 +484,7 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::ON_GREY:
 			break;
-		case StartLauferMachine::Event::LICHT_HINTEN: onLeavingEnde(); onEnteringOnTrail(); logLapBanner(robot);
+		case StartLauferMachine::Event::LICHT_HINTEN: onLeavingEnde(); onEnteringOnTrail(); logLapBanner(robot, file);
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
@@ -819,7 +819,7 @@ void StartLauferMachine::onEnteringFailure() {
 void StartLauferMachine::onEnteringStart() { // wait
 	state(State::START);
 	cout << "Start" << endl;
-	logStartConditions(robot);
+	logStartConditions(robot, file);
 }
 
 void StartLauferMachine::onEnteringSuchen() { //forward 
@@ -857,7 +857,7 @@ void StartLauferMachine::onEnteringOnTrail() {// forward
 }
 
 void StartLauferMachine::onEnteringOffTrail() {// stop
-	logOFF_TRAIL(robot);
+	logOFF_TRAIL(robot, file);
 	state(State::OFF_TRAIL);
 	robot->stop();
 	cout << "OffTrail" << endl;
@@ -874,7 +874,7 @@ void StartLauferMachine::onEnteringCorrectTrailRight() { // turn()
 	if (count == 16)
 	{
 		robot->current_corner = robot->current_corner + 1;
-		logCorner(robot);
+		logCorner(robot, file);
 		if (robot->current_corner == 4)
 		{
 			robot->current_lap = robot->current_lap + 1;
@@ -891,7 +891,7 @@ void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 	if (count == 16)
 	{
 		robot->current_corner = robot->current_corner + 1;
-		logCorner(robot);
+		logCorner(robot, file);
 		if (robot->current_corner == 4)
 		{
 			robot->current_lap = robot->current_lap + 1;
@@ -1068,8 +1068,6 @@ void StartLauferMachine::onEnteringAllign2() {
 	cout << "ALLIGN_2" << endl;
 
 }
-
-
 
 void StartLauferMachine::onLeavingObstacleDetected() {}
 

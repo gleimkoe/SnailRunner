@@ -61,7 +61,7 @@ void calibrationMenu(SnailRunner* robot)
 
             if (threshold_choice == 1)
             {
-                int temp = 0;
+                unsigned temp = 0;
                 std::cout << std::endl;
                 std::cout << " --- Unterer Graubereich --- " << std::endl;
                 std::cout << "aktueller Wert: " << robot->threshold_grey_low << std::endl;
@@ -69,21 +69,21 @@ void calibrationMenu(SnailRunner* robot)
 
                 do
                 {
-                    if (temp > 1000)
+                    if (temp > 3000)
                     {
                         std::cout << "Wert liegt nicht im gueltigen Bereich." << std::endl;
                         std::cout << "neuer Wert:     ";
                     }
 
                     std::cin >> temp;
-                } while (temp > 1000);
+                } while (temp > 3000);
 
                 robot->threshold_grey_low = temp;
             }
 
             else if (threshold_choice == 2)
             {
-                int temp = 0;
+                unsigned temp = 0;
                 std::cout << std::endl;
                 std::cout << " --- Oberer Graubereich --- " << std::endl;
                 std::cout << "aktueller Wert: " << robot->threshold_grey_high << std::endl;
@@ -91,35 +91,35 @@ void calibrationMenu(SnailRunner* robot)
 
                 do
                 {
-                    if (temp > 1000)
+                    if (temp > 3000)
                     {
                         std::cout << "Wert liegt nicht im gueltigen Bereich." << std::endl;
                         std::cout << "neuer Wert:     ";
                     }
 
                     std::cin >> temp;
-                } while (temp > 1000);
+                } while (temp > 3000);
 
                 robot->threshold_grey_high = temp;
             }
             /*
             else if (threshold_choice == 3)
             {
-                int temp = 0;
+                unsigned temp = 0;
                 std::cout << " --- Grau --- " << std::endl;
                 std::cout << "aktueller Wert: " << white << std::endl;
                 std::cout << "neuer Wert:     ";
 
                 do
                 {
-                    if (temp > 1000)
+                    if (temp > 3000)
                     {
                         std::cout << "Wert liegt nicht im gueltigen Bereich." << std::endl;
                         std::cout << "neuer Wert:     ";
                     }
 
                     std::cin >> temp;
-                } while (temp > 1000);
+                } while (temp > 3000);
 
                 grey = temp;
             }
@@ -130,7 +130,7 @@ void calibrationMenu(SnailRunner* robot)
         case 3: // calibration
         {
             unsigned color_choice = 0;
-            int measurement_amount = 5;
+            int measurement_amount = 100;
             std::string dummy;
             std::vector<int> values;
             unsigned sum = 0;
@@ -139,26 +139,20 @@ void calibrationMenu(SnailRunner* robot)
             std::cout << std::endl;
             std::cout << "--- Kalibrierung ---" << std::endl;
             std::cout << "Der Roboter muss auf weissen Untergrund gestellt werden. Bereit? Tippe ok." << std::endl;
+
             while (dummy != "ok")
             {
                 std::cin >> dummy;
             }
 
-            // Fahren, Messwerte aufnehmen, summieren, Durchschnitt bilden und und in white-Variable speichern
-
+			// drive, take measurements, sum up and save average to while variable
             robot->forward(0.5, METER);
-            for (int i = 0; i < measurement_amount; i++)
+            for (int i = 0; i < measurement_amount; i++)//=
             {
-                // values.push_back(robot->colourdown().value());
-                values.push_back(robot->colourdown().value());
-                values.push_back(robot->colourdown().value());
-                values.push_back(robot->colourdown().value());
-                values.push_back(robot->colourdown().value());
                 values.push_back(robot->colourdown().value());
             }
 
-            // get average of measured values
-            for (int i = 0; i < measurement_amount; i++)
+            for (int i = 0; i < measurement_amount; i++)//=
             {
                 sum += values.at(i);
             }
@@ -182,18 +176,14 @@ void calibrationMenu(SnailRunner* robot)
 
 			dummy = "nichtok";
 
+			// drive, take measurements, sum up and save average to while variable
             robot->forward(0.5, METER);
-            for (int i = 0; i < measurement_amount; i++)
+            for (int i = 0; i < measurement_amount; i++)//=
             {
-				values.push_back(robot->colourdown().value());
-				values.push_back(robot->colourdown().value());
-				values.push_back(robot->colourdown().value());
-				values.push_back(robot->colourdown().value());
 				values.push_back(robot->colourdown().value());
             }
 
-            // get average of measured values
-            for (int i = 0; i < measurement_amount; i++)
+            for (int i = 0; i < measurement_amount; i++)//=
             {
                 sum += values.at(i);
             }
@@ -202,7 +192,6 @@ void calibrationMenu(SnailRunner* robot)
             robot->black = average;
 
             std::cout << "Durchschnitt schwarz: " << average << std::endl;
-
             std::cout << "Schwellwerte werden berechnet... " << average << std::endl;
 
             robot->grey =(robot->black + robot->white)/2;
@@ -224,9 +213,7 @@ void calibrationMenu(SnailRunner* robot)
             std::cout << "--- Speichern in Datei ---" << std::endl;
             std::cout << "Die aktuellen Schwellwerte werden in einer Datei (threshold_values.txt) gespeichert." << std::endl;
 
-            std::ofstream file;
-
-            file.open("threshold_values.txt"); // falls Datei nicht vorhanden wird sie hier erstellt
+            std::ofstream file("threshold_values.txt");
 
             file << robot->threshold_grey_low << std::endl;
             file << robot->threshold_grey_high << std::endl;
@@ -255,7 +242,7 @@ void calibrationMenu(SnailRunner* robot)
             {
                 std::cerr << "Error: Datei konnte nicht geoeffnet werden. Standardwerte werden geladen." << std::endl;
 
-                robot->threshold_grey_low = 1300;
+                robot->threshold_grey_low =  1500;
                 robot->threshold_grey_high = 1600;
                 // grey = 0;
 
@@ -372,7 +359,7 @@ void settingsMenu(SnailRunner* robot)
             std::cout << "[1] - im Uhrzeigersinn" << std::endl;
             std::cout << "[0] - gegen den Uhrzeigersinn" << std::endl;
 
-			bool temp = 0;
+			bool temp = 1;
 
             std::cin >> temp;
 
@@ -445,11 +432,6 @@ void settingsMenu(SnailRunner* robot)
     }
 }
 
-/**********************************************************************************/
-//
-//                              FUNCTION 3 - RELAY RUN
-//
-/**********************************************************************************/
 
 /**********************************************************************************/
 //
@@ -458,13 +440,45 @@ void settingsMenu(SnailRunner* robot)
 /**********************************************************************************/
 
 
-//helperfunction to get timestamp
+/**********************************************************************************/
+//								KEEPING TRACK OF TIME
+/**********************************************************************************/
 
-void getTimeStamp()
+
+
+// sets start time. needs to called when round is started aka when the relay got handed over
+void startTimer(SnailRunner* robot)
+{
+	robot->start_time = std::clock();
+}
+
+// gets called when an event like obstacle or offtrail happens
+double getElapsedTime(SnailRunner* robot)
+{
+	std::clock_t current_time = std::clock();
+	return static_cast<double>(current_time - robot->start_time) / CLOCKS_PER_SEC;
+}
+
+// sets endtime. needs to be called when relay is handed over
+void endTimer(SnailRunner* robot)
+{
+	robot->end_time = std::clock();
+}
+
+// returns elapsed time of a round based on start_time and end_time
+double getDuration(SnailRunner* robot)
+{
+	double elapsed_time = static_cast<double>(robot->end_time - robot->start_time) / CLOCKS_PER_SEC;
+	return elapsed_time;
+}
+
+// helperfunction to get timestamp as string
+std::string getTimeStamp()
 {
 	std::time_t now = time(nullptr);
 	tm* local_time = localtime(&now);
 
+	std::string output;
 	int hours, minutes, seconds;
 
 	hours = local_time->tm_hour;
@@ -474,117 +488,158 @@ void getTimeStamp()
 	
 	if (hours > 9)
 	{
-		std::cout << hours << ":";
+		//std::cout << hours << ":";
+		output += to_string(hours) + ":";
 	}
 	else
 	{
-		std::cout << "0" << hours << ":";
+		//std::cout << "0" << hours << ":";
+		output += "0" + to_string(hours) + ":";
 	}
 
 	if (minutes > 9)
 	{
-		std::cout << minutes << ":";
+		//std::cout << minutes << ":";
+		output += to_string(minutes) + ":";
 	}
 	else
 	{
-		std::cout << "0" << minutes << ":";
+		//std::cout << "0" << minutes << ":";
+		output += "0" + to_string(minutes) + ":";
 	}
 	
 	if (seconds > 9)
 	{
-		std::cout << seconds;
+		//std::cout << seconds;
+		output += to_string(seconds);
 	}
 	else
 	{
-		std::cout << "0" << seconds;
+		//std::cout << "0" << seconds;
+		output += "0" + to_string(seconds);
 	}
+
+	return output;
 }
 
 
-//Methods to keep track of the track
+
+/**********************************************************************************/
+//								KEEPING TRACK OF TRACK
+/**********************************************************************************/
+
+// Methods to keep track of the track
 void resetDistance(SnailRunner* robot)
 {
 	robot->lapdistance = 0;
 }
 
-//gets called when back on state on_trail
+// gets called when back on state on_trail
 void resetEncoder(SnailRunner* robot)
 {
 	robot->left().encoder().clear();
 }
 
-//gets called when in state off_trail
+// gets called when in state off_trail
 void addtoDistance(SnailRunner* robot)
 {
 	robot->lapdistance += robot->left().encoder().value();
 }
 
 
-// TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
-void logStartConditions(SnailRunner* robot)
+
+/**********************************************************************************/
+//								LOG FUNCTIONS
+/**********************************************************************************/
+
+// LOG STARTING CONDITIONS
+/*
+*********************************
+Position: 	      Startlaeufer
+Fahrtrichtung:    Uhrzeigersinn
+Rundenanzahl:	  2
+Startzeit:        11:54:23
+*********************************
+*/
+void logStartConditions(SnailRunner* robot, std::ofstream &file)
 {
-    std::cout << "*********************************" << std::endl;
-    std::cout << "Position: 	  ";
-    if (robot->direction)
+    file << "*********************************" << std::endl;
+    file << "Position: 	        ";
+    if (robot->direction == 1)
     {
-        std::cout << "Startlaeufer" << std::endl;
+		file << "Startlaeufer" << std::endl;
     }
-    else
+    if (robot->direction == -1)
     {
-        std::cout << "Weiterlaeufer" << std::endl;
+		file << "Weiterlaeufer" << std::endl;
     }
 
-    std::cout << "Fahrtrichtung:    ";
+    file << "Fahrtrichtung:    ";
     if (robot->start_position)
     {
-        std::cout << "Uhrzeigersinn" << std::endl; // maybe left
+        file << "Uhrzeigersinn" << std::endl; // maybe left
     }
     else
     {
-        std::cout << "gegen den Uhrzeigersinn" << std::endl; // maybe right
+        file << "gegen den Uhrzeigersinn" << std::endl; // maybe right
     }
-    std::cout << "Rundenanzahl:     " << robot->lap_amount << std::endl;
-	std::cout << "Startzeit:        ";
-	getTimeStamp();
-    std::cout << "\n*********************************" << std::endl
-              << std::endl
-              << std::endl;
+
+	file << "Rundenanzahl:     " << robot->lap_amount << std::endl;
+	file << "Startzeit:        " << getTimeStamp();
+    file << "\n*********************************" << std::endl << std::endl << std::endl;
 }
 
-// DONE
-void logLapBanner(SnailRunner* robot)
+// LOG LAP BANNER
+/*
+---------------------------------
+			  Runde 2
+---------------------------------
+*/
+void logLapBanner(SnailRunner* robot, std::ofstream &file)
 {
-    std::cout << "---------------------------------" << std::endl;
-    std::cout << "             Runde " << robot->current_lap << std::endl;
-    std::cout << "---------------------------------" << std::endl;
+    file << "---------------------------------" << std::endl;
+    file << "             Runde "				<< robot->current_lap << std::endl;
+    file << "---------------------------------" << std::endl;
 }
 
-// TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
-void logOFF_TRAIL(SnailRunner* robot)
+// LOG OFF_TRAIL
+/*
+Abweichung   10.432s
+*/
+void logOFF_TRAIL(SnailRunner* robot, std::ofstream &file)
 {
-	std::cout << "Abweichung	  "; getTimeStamp();
-              //<< "11:45:56" << std::endl;
+	file << "Abweichung	  " << getElapsedTime() << "s";
 }
 
-// TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
-void logCorner(SnailRunner* robot)
+//logObstacle
+/*
+Hindernis   20.746s
+*/
+void logObstacle(SnailRunner* robot, std::ofstream &file)
 {
-	std::cout << robot->current_corner << ". Ecke           "; getTimeStamp();
-              //<< "11:45:45" << std::endl;
+	file << "Hindernis    " << getElapsedTime() << "s";
 }
 
-// TODO - offtrail_count muss im state OFF_TRAIL oder so inkrementiert werden
-// TODO - Uhrzeitdummy muss mit Funktion ersetzt werden, die die Uhrzeit zurückgibt
-// TODO - Strecke muss irgendwie gemessen werden. WTF wie? voll aufwändig. permanent die Impulse vom Motor zählen und daraus die Strecke berechnen?
-void logLapConclusion(SnailRunner* robot)
+// LOG CORNER
+/*
+2. Ecke            15.534
+*/
+void logCorner(SnailRunner* robot, std::ofstream &file)
 {
-    std::cout << std::endl
-              << robot->current_lap << ". Runde abgeschlossen:" << std::endl;
-    std::cout << "Zeit:             "
-              << "1 Min. 12 Sek." << std::endl;
-    std::cout << "Abweichungen:     " << robot->offtrail_count << std::endl;
-    std::cout << "Strecke:          "
-              << ((1 / 75)*robot->lapdistance*M_PI*0.05 / 360) / 100 << std::endl
-              << std::endl
-              << std::endl;
+	file << robot->current_corner << ". Ecke      " << getElapsedTime();
+}
+
+// TODO - funktioniert die Streckenmessung?
+/*
+1. Runde abgeschlossen:
+Zeit:             43.54s
+Abweichungen:     5
+Strecke:          256cm
+*/
+void logLapConclusion(SnailRunner* robot, std::ofstream &file)
+{
+    file << std::endl << robot->current_lap << ". Runde abgeschlossen:" << std::endl;
+    file << "Zeit:             " << getDuration() << "s" <<std::endl;
+    file << "Abweichungen:     " << robot->offtrail_count << std::endl;
+    file << "Strecke:          " << ((1 / 75)*robot->lapdistance*M_PI*0.05 / 360) / 100 << "cm" << std::endl << std::endl << std::endl;
 }

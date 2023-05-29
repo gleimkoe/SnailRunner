@@ -81,7 +81,7 @@ public:
 	/* -- Funktion fuer StartLauferMachine -- */
 	void sollecken_setzen(int vorgabe) { corner_amount = vorgabe; }
 	void sollrunde_setzen(int vorgabe) { lap_amount = vorgabe; }
-	void runde_hochzaehlen() { current_lap = current_lap + 1; }
+	void runde_hochzaehlen() { current_lap++; }
 
 	/* -- Funktion fuer WeiterLauferMachine -- */
 	
@@ -108,7 +108,7 @@ public:
 	//
 	/******************************************************************************/
 
-	// true - starter
+	// true  - starter
 	// false - follower
 	bool start_position = true;
 
@@ -117,30 +117,24 @@ public:
 	int direction = 1;
 
 	// amount of laps
-	int lap_amount = 0; // SollRunde
-	int corner_amount = 0; // SollEcken
-
+	int lap_amount = 1;		// SollRunde
+	int corner_amount = 0;  // SollEcken
 
 	/******************************************************************************/
 	//
 	//									LOGGING
 	//
 	/******************************************************************************/
-	int current_lap = 0; // aktuelle_Runde
+	std::clock_t start_time = 0;
+	std::clock_t end_time = 0;
+
+	int current_lap = 0;
 	int current_corner = 0;
 	int offtrail_count = 0;
 
 	double lapdistance = 0;
 
-	//int aktuelle_Runde = 0;
-	//int SollRunde = 0;
-	//int SollEcken;
 private:
-
-	
-	
-	
-
 	/*! Die Aktoren (Motoren und Lampen) des Roboters. */
 	IntelligentMotor leftmotor;
 	IntelligentMotor rightmotor;
@@ -166,12 +160,19 @@ private:
 	double streckeRunnerimGrad = runner_umfang / 360;
 	double radUmdrehungproGrad = streckeRunnerimGrad / rad_umfang;
 	double grad_in_impulse = 75;
-	int speed;			/*! Geschwindigkeit der Roboters. */
+	
+	/*! Geschwindigkeit der Roboters. */
+	int speed;
+
+	/*! Letzter Farbwert; wird benötigt um Erreichen von Schwellenwert zu bestimmen. */
 	int last_colour_back;
-	int last_colour_down;	/*! Letzter Farbwert; wird benötigt um Erreichen von Schwellenwert zu bestimmen. */
+	int last_colour_down;	
 	int last_last_colour_down = 0;
-	int last_dis;		/*! Letzter Distanzwert; dito. */
-	int last_dis_side; // Letzter Distanz rechter Sensor
+
+	/*! Letzter Distanzwert; dito. */
+	int last_dis;
+	// Letzter Distanz rechter Sensor
+	int last_dis_side; 
 
 	/*! Zustandsmaschinen für die einzelnen Missionen. */
 	ExploreStateMachine* ex_state;

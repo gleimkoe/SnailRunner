@@ -16,7 +16,7 @@ const std::map<ObstacleStateMachine::State, std::string> ObstacleStateMachine::S
 	{ State::EVASION_3, "EVASION_3" },
 	{ State::EVASION_4, "EVASION_4" },
 	{ State::EVASION_5, "EVASION_5" },
-	{State::EVASION_6, "EVASION_6"},
+	{ State::EVASION_6, "EVASION_6"},
 	{ State::BACK_1, "BACK_1" },
 	{ State::BACK_2, "BACK_2" },
 	{ State::ALLIGN_1, "ALLIGN_1" },
@@ -27,8 +27,8 @@ const std::map<ObstacleStateMachine::Event, std::string> ObstacleStateMachine::E
 	{ Event::IS_STOPPED, "IS_STOPPED" },
 	{ Event::WALL_AHEAD, "WALL_AHEAD" },
 	{ Event::CLEAR_VIEW, "CLEAR_VIEW" },
-	{Event::ON_TRAIL, "ON_TRAIL"},
-	{Event::NO_SIDEWALL, "NO_SIDEWALL"}
+	{ Event::ON_TRAIL, "ON_TRAIL"},
+	{ Event::NO_SIDEWALL, "NO_SIDEWALL"}
 };
 
 ObstacleStateMachine::ObstacleStateMachine(SnailRunner* r) :mystate(State::FAILURE), robot(r), count(0) {}
@@ -320,7 +320,6 @@ void ObstacleStateMachine::onEnteringOnTrail() {
 	cout << "ON_TRAIL" << endl;
 	robot->forward(1, METER);
 	count = 1;
-
 }
 
 void ObstacleStateMachine::onEnteringObstacleDetected() {
