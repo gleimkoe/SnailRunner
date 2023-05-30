@@ -372,7 +372,6 @@ void menue() {
 			StopSupervision();
 			break;
 		case '7':
-			std::ofstream file("name.txt");
 			int SollRunde;
 			cout << "Anzahl der Runden eingeben:";
 			cin >> SollRunde;
@@ -384,7 +383,6 @@ void menue() {
 				<< "Enter 'OK' to stop: " << flush;
 			cin >> dummy;
 			StopSupervision();
-			file.close();
 			break;
 		case '8':
 			int SollRunde_1;

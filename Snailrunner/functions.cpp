@@ -145,11 +145,13 @@ void calibrationMenu(SnailRunner* robot)
                 std::cin >> dummy;
             }
 
+			//DURCHSCHNITT WEISS UND IN WEISS VARIABLE SPEICHERN
 			// drive, take measurements, sum up and save average to while variable
             robot->forward(0.5, METER);
             for (int i = 0; i < measurement_amount; i++)//=
             {
                 values.push_back(robot->colourdown().value());
+				WaitUntilIsOver(20);
             }
 
             for (int i = 0; i < measurement_amount; i++)//=
@@ -160,6 +162,7 @@ void calibrationMenu(SnailRunner* robot)
             average = sum / (measurement_amount);
             robot->white = average;
 
+			
             std::cout << "Durchschnitt weiss: " << average << std::endl;
 
             // Werte zuruecksetzen fuer naechste Kalibrierung
@@ -176,11 +179,13 @@ void calibrationMenu(SnailRunner* robot)
 
 			dummy = "nichtok";
 
+			//DURCHSCHNITT SCHWARZ UND IN SCHWARZ VARIABLE SPEICHERN
 			// drive, take measurements, sum up and save average to while variable
             robot->forward(0.5, METER);
             for (int i = 0; i < measurement_amount; i++)//=
             {
 				values.push_back(robot->colourdown().value());
+				WaitUntilIsOver(20);
             }
 
             for (int i = 0; i < measurement_amount; i++)//=
@@ -191,13 +196,56 @@ void calibrationMenu(SnailRunner* robot)
             average = sum / (measurement_amount);
             robot->black = average;
 
+			dummy = "nichtok";
+
+			
+
             std::cout << "Durchschnitt schwarz: " << average << std::endl;
-            std::cout << "Schwellwerte werden berechnet... " << average << std::endl;
 
-            robot->grey =(robot->black + robot->white)/2;
-            robot->threshold_grey_low = robot->grey - 200;
-            robot->threshold_grey_high = robot->grey + 200;
+			// Werte zuruecksetzen fuer naechste Kalibrierung
+			dummy = "0";
+			sum = 0;
+			average = 0;
+			values.clear();
 
+			std::cout << "Der Roboter muss auf grauen Untergrund gestellt werden. Bereit? Tippe ok." << std::endl;
+			while (dummy != "ok")
+			{
+				std::cin >> dummy;
+			}
+
+			dummy = "nichtok";
+
+			//DURCHSCHNITT GRAU UND IN GRAU VARIABLE SPEICHERN
+			// drive, take measurements, sum up and save average to while variable
+			robot->forward(0.5, METER);
+			for (int i = 0; i < measurement_amount; i++)//=
+			{
+				values.push_back(robot->colourdown().value());
+				WaitUntilIsOver(20);
+			}
+
+			for (int i = 0; i < measurement_amount; i++)//=
+			{
+				sum += values.at(i);
+			}
+
+			average = sum / (measurement_amount);
+			robot->grey = average;
+
+			dummy = "nichtok";
+
+
+
+			std::cout << "Durchschnitt grau: " << average << std::endl;
+			std::cout << "Schwellwerte werden berechnet... "  << std::endl;
+
+            //robot->grey =(robot->black + robot->white)/2;
+           robot->threshold_grey_low = (robot->grey + robot->white)/2  + 500;
+           robot->threshold_grey_high = (robot->grey + robot->black)/2;
+
+		   std::cout << "Grau/Weiss: " << robot->threshold_grey_low << std::endl;
+		   std::cout << "Grau/Schwarz: "<< robot->threshold_grey_high << std::endl;
             std::cout << "Tippe 'ok' um ins Hauptmenue zu gelangen." << std::endl;
             while (dummy != "ok")
             {
@@ -564,7 +612,7 @@ Startzeit:        11:54:23
 void logStartConditions(SnailRunner* robot, std::ofstream &file)
 {
     file << "*********************************" << std::endl;
-    file << "Position: 	        ";
+    file << "Position: 	  ";
     if (robot->direction == 1)
     {
 		file << "Startlaeufer" << std::endl;
@@ -608,7 +656,8 @@ Abweichung   10.432s
 */
 void logOFF_TRAIL(SnailRunner* robot, std::ofstream &file)
 {
-	file << "Abweichung	  " << getElapsedTime() << "s";
+	robot->offtrail_count++;
+	file << "Abweichung	  " << getElapsedTime(robot) << "s" << endl;
 }
 
 //logObstacle
@@ -617,7 +666,8 @@ Hindernis   20.746s
 */
 void logObstacle(SnailRunner* robot, std::ofstream &file)
 {
-	file << "Hindernis    " << getElapsedTime() << "s";
+	robot->obstacle_count++;
+	file << "Hindernis         " << getElapsedTime(robot) << "s" << endl;
 }
 
 // LOG CORNER
@@ -626,7 +676,7 @@ void logObstacle(SnailRunner* robot, std::ofstream &file)
 */
 void logCorner(SnailRunner* robot, std::ofstream &file)
 {
-	file << robot->current_corner << ". Ecke      " << getElapsedTime();
+	file << robot->current_corner << ". Ecke            " << getElapsedTime(robot) << endl;
 }
 
 // TODO - funktioniert die Streckenmessung?
@@ -638,8 +688,9 @@ Strecke:          256cm
 */
 void logLapConclusion(SnailRunner* robot, std::ofstream &file)
 {
-    file << std::endl << robot->current_lap << ". Runde abgeschlossen:" << std::endl;
-    file << "Zeit:             " << getDuration() << "s" <<std::endl;
+    file << std::endl << robot->current_lap  << ". Runde abgeschlossen:" << std::endl;
+    file << "Zeit:             " << getDuration(robot) << "s" <<std::endl;
     file << "Abweichungen:     " << robot->offtrail_count << std::endl;
+	file << "Hindernisse:      " << robot->obstacle_count << std::endl;
     file << "Strecke:          " << ((1 / 75)*robot->lapdistance*M_PI*0.05 / 360) / 100 << "cm" << std::endl << std::endl << std::endl;
 }

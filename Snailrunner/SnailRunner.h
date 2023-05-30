@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <queue>
+#include <vector>
+#include <ctime>
 
 /* --Include State Machines. */
 #include "ExploreStateMachine.h"
@@ -53,6 +55,10 @@ public:
 	bool stop();
 	/* turn -Methode*/
 	void turn(double grad);
+
+	/*Grauwerte Queue*/
+	bool detectGrey();
+
 	/*! Diese Methoden liefern einzelne Komponenten des Roboters zurück. */
 	IntelligentMotor& left() { return leftmotor; }
 	IntelligentMotor& right() { return rightmotor; }
@@ -97,9 +103,11 @@ public:
 	int grey = 1400;
 
 	// threshold values Farbsensor unten
-	int threshold_grey_low = 1500;
-	int threshold_grey_high = 1600;
+	int threshold_grey_low = 1425;//1500;
+	int threshold_grey_high = 1845;//1600;
 	int threshold_square_gradient = 275;
+
+	vector<int> greyvalues;
 
 
 	/******************************************************************************/
@@ -128,9 +136,11 @@ public:
 	std::clock_t start_time = 0;
 	std::clock_t end_time = 0;
 
-	int current_lap = 0;
+	int current_lap = 1;
 	int current_corner = 0;
 	int offtrail_count = 0;
+
+	int obstacle_count = 0;
 
 	double lapdistance = 0;
 

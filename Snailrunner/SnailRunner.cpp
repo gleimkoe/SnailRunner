@@ -227,7 +227,26 @@ void SnailRunner::onMotorStopped(Bitfield bfield) {
  *  Das eigentliche Verhalten des Roboters ist in den Zustandsmaschinen in
  *  den Dateien Mission.{cpp|h} beschrieben.
  */
+	bool SnailRunner::detectGrey()
+	{
+		vector<int> dummy;
+		bool returnvalue = false;
 
+		//while (!greyvalues.empty())
+		//{
+		if ((greyvalues.at((greyvalues.size() - 2)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 2)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 3)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 3)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 4)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 4)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 5)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 5)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 6)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 6)) >= threshold_grey_low)) //&& (greyvalues.at((greyvalues.size() - 7)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 7)) >= threshold_grey_low))
+			{
+				returnvalue = true;
+			}
+
+			//dummy.push(greyvalues.front());
+			//greyvalues.pop();
+		//}
+
+		//greyvalues = dummy;
+		return returnvalue;
+	}
+	
 void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_COLOR = 1400;
 	const int THRESHOLD_DISTANCE_LOW = 30;
@@ -239,31 +258,11 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_COLOR_BACK_MIN = 1000;
 	const int THRESHOLD_GRADIENT = 275;
 
-	/*
-	queue<int> fifo_grau;
-	const int max = 5;
-	int val_old = 0;
-	*/
-
-	//const int THRESHOLD_COLOR_BACK_MAX =
-
-
 	if (bfield&(1 << INPUT_COLOUR_DOWN)) {
 
 		int col = colourdown().value();
-/*		if (fifo_grau.size() < max)
-		{
-			fifo_grau.push(colourdown().value());
-			cout << col << endl;
-		}
-		else
-		{
-			val_old = fifo_grau.front();
-			fifo_grau.pop();
-			fifo_grau.push(colourdown().value());
-			cout << val_old << " , " << col << endl;
-		}
-*/
+
+		greyvalues.push_back(col);
 
 		// --Überprüfe, ob Schwellenwert überschritten.
 		if (col > threshold_grey_high && last_colour_down < threshold_grey_high) {
@@ -328,10 +327,14 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 				//sl_state->handle(StartLauferMachine::Event::ON_GREY);							
 				if (sl_state->state() == StartLauferMachine::State::ON_TRAIL)
 				{
-					if (current_corner >= 4)
+					if (current_corner >= 4 )
 					{
-						cout << "EVENT: ON_GREY" << endl;
-						sl_state->handle(StartLauferMachine::Event::ON_GREY);
+						if (detectGrey() == true)
+						{
+							cout << "EVENT: ON_GREY 4. ECKE" << endl;
+							sl_state->handle(StartLauferMachine::Event::ON_GREY);
+						}
+						
 					}
 				}
 				else
@@ -580,10 +583,4 @@ bool SnailRunner::vergleich_ecke(int corner_amount) {
 
 }
 
-/* -- Funktion fuer StartLauferMachine -- */
-
-
-
-
-/* -- Funktion fuer WeiterLauferMachine -- */
 

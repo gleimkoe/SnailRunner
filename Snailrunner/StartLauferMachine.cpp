@@ -82,6 +82,7 @@ void StartLauferMachine::start() {
 
 	/* --Start with initial transition. */
 	onEnteringStart();
+	startTimer(robot);
 	/* --INFO: Here you can change/add initial values when state machine is started. */
 
 }
@@ -268,10 +269,17 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::ON_GREY: 
 			cout << "ON_GREY VON ON_TRAIL" << endl;
-			if (robot->current_corner >= 4)
+			if (robot->current_corner >= 4 && robot ->current_lap < robot ->lap_amount)
 			{
 				cout << "ON_TRAIL ZU RELAY" << endl;
 				onLeavingOnTrail(); onEnteringRelay();
+			}
+			else if (robot->current_corner >= 4 && robot->current_lap == robot->lap_amount)
+			{
+				
+				cout << "ON_TRAIL ZU FINAL" << endl;
+				onLeavingOnTrail(); onEnteringFinal();
+				logLapConclusion(robot, file);
 			}
 			break;
 		case StartLauferMachine::Event::LICHT_HINTEN:
@@ -388,16 +396,17 @@ void StartLauferMachine::transition(Event ev) {
 		switch (ev)
 		{
 		case StartLauferMachine::Event::WALL_AHEAD:
-			if (robot->current_lap == robot->lap_amount)
+			/*if (robot->current_lap == robot->lap_amount)
 			{
 				logLapConclusion(robot, file);
 				cout << "RUNDE_CNT" << endl;
 				onLeavingRelay(); onEnteringFinal();
 			}
-			else
+			else */
 			{
 				onLeavingRelay(); onEnteringLampeGray();
 			}
+			
 			break;
 		case StartLauferMachine::Event::NOT_WALL_AHEAD: 
 			break;
@@ -875,11 +884,14 @@ void StartLauferMachine::onEnteringCorrectTrailRight() { // turn()
 	{
 		robot->current_corner = robot->current_corner + 1;
 		logCorner(robot, file);
-		if (robot->current_corner == 4)
+		/*if (robot->current_corner == 4)
 		{
 			robot->current_lap = robot->current_lap + 1;
+			cout << "Lap Nr, : " << robot->current_lap << endl;
 		}
+		*/
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
+		
 	}
 	robot->turn(count * -7.5);
 	cout << "CorrectRight" << endl;
@@ -892,10 +904,12 @@ void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 	{
 		robot->current_corner = robot->current_corner + 1;
 		logCorner(robot, file);
+		/*
 		if (robot->current_corner == 4)
 		{
 			robot->current_lap = robot->current_lap + 1;
-		}
+			cout << "Lap Nr, : " << robot->current_lap << endl;
+		}*/
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
 	}
 
@@ -906,6 +920,7 @@ void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 void StartLauferMachine::onEnteringFinal() {
 	state(State::FINAL);
 	robot->stop();
+	endTimer(robot);
 	robot->lampright().off();
 	robot->lampfront().off();
 	robot->lampleft().on();
@@ -916,10 +931,12 @@ void StartLauferMachine::onEnteringLampeGray() {
 	state(State::LAMPE_GRAY);
 	robot->stop();
 	robot->lampfront().on();
+	robot ->current_lap = robot->current_lap + 1;
 	robot ->current_corner = 0;
 	cout << "LampeGray" << endl;
 	cout << "Runde Nr: " << robot-> current_lap << endl;
 	cout << "Staffel Übergabe" << endl;
+	logLapConclusion(robot, file);
 }
 
 void StartLauferMachine::onEnteringReady() {
@@ -997,6 +1014,7 @@ void StartLauferMachine::onLeavingReady() {}
 void StartLauferMachine::onEnteringObstacleDetected() {
 	state(State::OBSTACLE_DETECTED);
 	robot->stop();
+	logObstacle(robot, file);
 	cout << "OBSTACLE_DETECTED" << endl;
 }
 

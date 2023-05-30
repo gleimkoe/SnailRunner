@@ -9,15 +9,17 @@
 #include "SnailRunner.h"
 #include <ctime>
 
+using namespace std;
+
 //Menu functions
 void calibrationMenu(SnailRunner* robot);
 void settingsMenu(SnailRunner* robot);
 
 //Keeping track of Time
-void startTimer();
-double getElapsedTime();
-void endTimer();
-double getDuration();
+void startTimer(SnailRunner* robot);
+double getElapsedTime(SnailRunner* robot);
+void endTimer(SnailRunner* robot);
+double getDuration(SnailRunner* robot);
 std::string getTimeStamp();
 
 //Keeping track of Track

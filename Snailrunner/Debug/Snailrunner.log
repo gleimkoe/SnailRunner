@@ -1,14 +1,2 @@
-﻿  ExploreStateMachine.cpp
-  ForwardStateMachine.cpp
-  functions.cpp
-  main.cpp
-c:\users\maxra\onedrive\studium\software engineering\snailrunner\snailrunner\main.cpp(1): warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
-  c:\users\maxra\onedrive\studium\software engineering\snailrunner\snailrunner\main.cpp: note: see previous definition of '_CRT_SECURE_NO_WARNINGS'
-  ObstacleStateMachine.cpp
-  SearchStateMachine.cpp
-  SnailRunner.cpp
-  StartLauferMachine.cpp
-  StartStateMachine.cpp
-  WeiterLauferMachine.cpp
-  Generating Code...
-  Snailrunner.vcxproj -> C:\Users\maxra\OneDrive\Studium\Software Engineering\SnailRunner\Debug\Snailrunner.exe
+﻿  SnailRunner.cpp
+  Snailrunner.vcxproj -> Z:\Software_Engineering\SnailRunner3\SnailRunner\Debug\Snailrunner.exe
