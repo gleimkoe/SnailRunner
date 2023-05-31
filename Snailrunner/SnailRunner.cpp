@@ -229,12 +229,17 @@ void SnailRunner::onMotorStopped(Bitfield bfield) {
  */
 	bool SnailRunner::detectGrey()
 	{
-		vector<int> dummy;
+		//vector<int> dummy;
 		bool returnvalue = false;
 
 		//while (!greyvalues.empty())
 		//{
-		if ((greyvalues.at((greyvalues.size() - 2)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 2)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 3)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 3)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 4)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 4)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 5)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 5)) >= threshold_grey_low) && (greyvalues.at((greyvalues.size() - 6)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 6)) >= threshold_grey_low)) //&& (greyvalues.at((greyvalues.size() - 7)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 7)) >= threshold_grey_low))
+		if (   (greyvalues.at((greyvalues.size() - 2)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 2)) >= threshold_grey_low) 
+			&& (greyvalues.at((greyvalues.size() - 3)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 3)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 4)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 4)) >= threshold_grey_low) 
+			&& (greyvalues.at((greyvalues.size() - 5)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 5)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 6)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 6)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 7)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 7)) >= threshold_grey_low))
 			{
 				returnvalue = true;
 			}
@@ -244,6 +249,7 @@ void SnailRunner::onMotorStopped(Bitfield bfield) {
 		//}
 
 		//greyvalues = dummy;
+	
 		return returnvalue;
 	}
 	
@@ -251,8 +257,8 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_COLOR = 1400;
 	const int THRESHOLD_DISTANCE_LOW = 30;
 	const int THRESHOLD_DISTANCE_HIGH = 40;
-	const int THRESHOLD_DISTANCE = 10;
-	const int THRESHOLD_DISTANCE_SIDE = 30;
+	int THRESHOLD_DISTANCE = threshold_distance;
+	int THRESHOLD_DISTANCE_SIDE = threshold_distance_side;
 	const int THRESHOLD_COLOR_GRAU_WEISS = 1300;
 	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 1600;
 	const int THRESHOLD_COLOR_BACK_MIN = 1000;
@@ -327,15 +333,12 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 				//sl_state->handle(StartLauferMachine::Event::ON_GREY);							
 				if (sl_state->state() == StartLauferMachine::State::ON_TRAIL)
 				{
-					if (current_corner >= 4 )
+					if (detectGrey() == true)
 					{
-						if (detectGrey() == true)
-						{
-							cout << "EVENT: ON_GREY 4. ECKE" << endl;
-							sl_state->handle(StartLauferMachine::Event::ON_GREY);
-						}
-						
+						//cout << "EVENT: ON_GREY VOR 4. ECKE" << endl;
+						sl_state->handle(StartLauferMachine::Event::ON_GREY);
 					}
+																				
 				}
 				else
 				{

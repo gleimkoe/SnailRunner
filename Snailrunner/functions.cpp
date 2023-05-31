@@ -34,6 +34,9 @@ void calibrationMenu(SnailRunner* robot)
             std::cout << "--- Aktuelle Schwellwerte ---" << std::endl;
             std::cout << "Untere Graugrenze:   " << robot->threshold_grey_low << std::endl;
             std::cout << "oberere Graugrenze: " << robot->threshold_grey_high << std::endl;
+			std::cout << "Distanzsensor vorne: " << robot->threshold_distance << std::endl;
+			std::cout << "Distanzsensor rechts: " << robot->threshold_distance_side << std::endl;
+
             // std::cout << "grau:    " << grey << std::endl;
             std::cout << std::endl;
 
@@ -55,6 +58,8 @@ void calibrationMenu(SnailRunner* robot)
             std::cout << "Welche Werte sollen geaendert werden?" << std::endl;
             std::cout << "[1] - unterer Graubereich" << std::endl;
             std::cout << "[2] - oberer Graubereich" << std::endl;
+			std::cout << "[3] - Distanzsensor vorne" << std::endl;
+			std::cout << "[4] - Distanzsensor rechts" << std::endl;
             // std::cout << "[3] - grau" << std::endl;
 
             std::cin >> threshold_choice;
@@ -102,17 +107,17 @@ void calibrationMenu(SnailRunner* robot)
 
                 robot->threshold_grey_high = temp;
             }
-            /*
+
             else if (threshold_choice == 3)
             {
                 unsigned temp = 0;
-                std::cout << " --- Grau --- " << std::endl;
-                std::cout << "aktueller Wert: " << white << std::endl;
+                std::cout << " --- Distanzsensor vorne --- " << std::endl;
+                std::cout << "aktueller Wert: " << robot->threshold_distance << std::endl;
                 std::cout << "neuer Wert:     ";
 
                 do
                 {
-                    if (temp > 3000)
+                    if (temp > 30)
                     {
                         std::cout << "Wert liegt nicht im gueltigen Bereich." << std::endl;
                         std::cout << "neuer Wert:     ";
@@ -121,9 +126,29 @@ void calibrationMenu(SnailRunner* robot)
                     std::cin >> temp;
                 } while (temp > 3000);
 
-                grey = temp;
+                robot->threshold_distance = temp;
             }
-            */
+
+			else if (threshold_choice == 4)
+			{
+				unsigned temp = 0;
+				std::cout << " --- Distanzsensor rechts --- " << std::endl;
+				std::cout << "aktueller Wert: " << robot->threshold_distance_side << std::endl;
+				std::cout << "neuer Wert:     ";
+
+				do
+				{
+					if (temp > 30)
+					{
+						std::cout << "Wert liegt nicht im gueltigen Bereich." << std::endl;
+						std::cout << "neuer Wert:     ";
+					}
+
+					std::cin >> temp;
+				} while (temp > 3000);
+
+				robot->threshold_distance_side = temp;
+			}
             break;
         }
 
@@ -241,7 +266,7 @@ void calibrationMenu(SnailRunner* robot)
 			std::cout << "Schwellwerte werden berechnet... "  << std::endl;
 
             //robot->grey =(robot->black + robot->white)/2;
-           robot->threshold_grey_low = (robot->grey + robot->white)/2  + 500;
+           robot->threshold_grey_low = (robot->grey + robot->white)/2 + 500;
            robot->threshold_grey_high = (robot->grey + robot->black)/2;
 
 		   std::cout << "Grau/Weiss: " << robot->threshold_grey_low << std::endl;
@@ -265,6 +290,9 @@ void calibrationMenu(SnailRunner* robot)
 
             file << robot->threshold_grey_low << std::endl;
             file << robot->threshold_grey_high << std::endl;
+			file << robot->threshold_distance << std::endl;
+			file << robot->threshold_distance_side << std::endl;
+
 
             file.close();
 
@@ -292,7 +320,8 @@ void calibrationMenu(SnailRunner* robot)
 
                 robot->threshold_grey_low =  1500;
                 robot->threshold_grey_high = 1600;
-                // grey = 0;
+				robot->threshold_distance = 10;
+				robot->threshold_distance_side = 30;
 
                 std::cout << "Tippe 'ok' um ins Hauptmenue zu gelangen." << std::endl;
                 std::string dummy;
@@ -311,10 +340,16 @@ void calibrationMenu(SnailRunner* robot)
                 std::getline(file, temp);
                 robot->threshold_grey_high = stoi(temp);
                 std::cout << "obere Graugrenze: " << temp << std::endl;
-                /*
-                                std::getline(file, temp);
-                                grey = stoi(temp);
-                */
+
+				std::getline(file, temp);
+				robot->threshold_distance = stoi(temp);
+				std::cout << "Distanzsensor vorne: " << temp << std::endl;
+
+				std::getline(file, temp);
+				robot->threshold_distance_side = stoi(temp);
+				std::cout << "Distanzsensor rechts: " << temp << std::endl;
+
+
 
                 file.close();
 
@@ -613,17 +648,17 @@ void logStartConditions(SnailRunner* robot, std::ofstream &file)
 {
     file << "*********************************" << std::endl;
     file << "Position: 	  ";
-    if (robot->direction == 1)
+    if (robot->start_position == 1)
     {
 		file << "Startlaeufer" << std::endl;
     }
-    if (robot->direction == -1)
+	else //(robot->start_position == -1)
     {
 		file << "Weiterlaeufer" << std::endl;
     }
 
     file << "Fahrtrichtung:    ";
-    if (robot->start_position)
+    if (robot->direction == 1)
     {
         file << "Uhrzeigersinn" << std::endl; // maybe left
     }
@@ -676,7 +711,7 @@ void logObstacle(SnailRunner* robot, std::ofstream &file)
 */
 void logCorner(SnailRunner* robot, std::ofstream &file)
 {
-	file << robot->current_corner << ". Ecke            " << getElapsedTime(robot) << endl;
+	file << robot->current_corner << ". Ecke           " << getElapsedTime(robot) << endl;
 }
 
 // TODO - funktioniert die Streckenmessung?
@@ -689,8 +724,10 @@ Strecke:          256cm
 void logLapConclusion(SnailRunner* robot, std::ofstream &file)
 {
     file << std::endl << robot->current_lap  << ". Runde abgeschlossen:" << std::endl;
-    file << "Zeit:             " << getDuration(robot) << "s" <<std::endl;
+    file << "Zeit:             " << getElapsedTime(robot) << "s" <<std::endl;
     file << "Abweichungen:     " << robot->offtrail_count << std::endl;
 	file << "Hindernisse:      " << robot->obstacle_count << std::endl;
-    file << "Strecke:          " << ((1 / 75)*robot->lapdistance*M_PI*0.05 / 360) / 100 << "cm" << std::endl << std::endl << std::endl;
+	file << "Strecke:          " << ((robot->lapdistance / 60.0) / 2.0)*M_PI*0.05/*((1.0 / 75.0)* robot->lapdistance*M_PI*0.05 / 360.0) / 100.0 */<< "m" << std::endl << std::endl << std::endl;
+
+	std::cout << std::endl << std::endl;
 }

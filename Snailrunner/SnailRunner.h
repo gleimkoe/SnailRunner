@@ -103,9 +103,10 @@ public:
 	int grey = 1400;
 
 	// threshold values Farbsensor unten
-	int threshold_grey_low = 1425;//1500;
-	int threshold_grey_high = 1845;//1600;
-	int threshold_square_gradient = 275;
+	int threshold_grey_low = 1238;//1500;
+	int threshold_grey_high = 1825;//1600;
+	int threshold_distance= 10;
+	int threshold_distance_side = 30;
 
 	vector<int> greyvalues;
 

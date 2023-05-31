@@ -8,6 +8,7 @@
 #include <cstdio>
 #include "SnailRunner.h"
 #include <ctime>
+#include "IntelligentMotor.h"
 
 using namespace std;
 
