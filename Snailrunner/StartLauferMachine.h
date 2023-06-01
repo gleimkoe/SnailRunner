@@ -12,13 +12,14 @@ class SnailRunner;
 class StartLauferMachine {
 public:
 
-	enum class State { FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, AUSRICHTEN_4, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, RELAY, LAMPE_GRAY, ENDE, READY, 
-					
-					   OBSTACLE_DETECTED, EVASION_1, EVASION_2, EVASION_3, EVASION_4, EVASION_5, EVASION_6, BACK_1, BACK_2, ALLIGN_1, ALLIGN_2, 
+	enum class State {
+		FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, AUSRICHTEN_4, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, RELAY, LAMPE_GRAY, ENDE, READY,
+
+		OBSTACLE_DETECTED, EVASION_1, EVASION_2, EVASION_3, EVASION_4, EVASION_5, EVASION_6, BACK_1, BACK_2, ALLIGN_1, ALLIGN_2, CORRECT_TO_LEFT, CORRECT_TO_RIGHT,
 
 					   VOR_FINAL, FINAL };
 
-	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, LICHT_HINTEN, NOT_LICHT_HINTEN, NO_SIDEWALL };
+	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, LICHT_HINTEN, NOT_LICHT_HINTEN, NO_SIDEWALL, TOO_CLOSE, TOO_FAR };
 
 	StartLauferMachine(SnailRunner* r);
 	/* --Returns the current state. */
@@ -35,6 +36,7 @@ private:
 	State mystate;
 	SnailRunner* robot;
 	int count = 0;
+	
 
 
 	/* -- Methods called when entering a state. */
@@ -67,6 +69,8 @@ private:
 	void onEnteringBack2();
 	void onEnteringAllign1();
 	void onEnteringAllign2();
+	void onEnteringCorrectToLeft();
+	void onEnteringCorrectToRight();
 
 	void onEnteringVorFinal();
 	void onEnteringFinal();
@@ -105,6 +109,8 @@ private:
 	void onLeavingBack2();
 	void onLeavingAllign1();
 	void onLeavingAllign2();
+	void onLeavingCorrectToLeft();
+	void onLeavingCorrectToRight();
 
 	void onLeavingVorFinal();
 	void onLeavingFinal();

@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 FtMscLib.dll Version  01.05.11  (2012/02/19)
 FtLogLevel= 0
-14:52:32:627, Initialization of Library 'ftMscLib.dll' ...
+15:04:13:352, Initialization of Library 'ftMscLib.dll' ...
 
 INFO:   size FTX1_SHMIFINFO   = 64
 INFO:   size FTX1_STATE       = 100
@@ -20,43 +20,40 @@ INFO:   size FISH_X1_TRANSFER = 1024
 INFO: size IF08_MAX           = 9
 INFO: size IF08_TRANSFER      = 9216
 
-14:52:32:636, Creating event objects...
-14:52:32:637, Starting thread [WaitMmRpTmEvent]...
-14:52:32:638,   [WaitMmRpTmEvent] started, hRpTmThrWait= 408
-14:52:32:638, Starting thread [WaitMmEvent]...
-14:52:32:639,   [WaitMmEventThread] started, hThrWait= 400
-14:52:32:640, Starting thread [FtRequestThread]...
-14:52:32:641,   [FtRequestThread] started, hThrRequest= 296
-14:52:32:642, Starting MMTimer... (mmRpTimerId= 16)
-14:52:32:643, ftMscLib is initialized ...
+15:04:13:363, Creating event objects...
+15:04:13:363, Starting thread [WaitMmRpTmEvent]...
+15:04:13:364,   [WaitMmRpTmEvent] started, hRpTmThrWait= 292
+15:04:13:364, Starting thread [WaitMmEvent]...
+15:04:13:365,   [WaitMmEventThread] started, hThrWait= 408
+15:04:13:366, Starting thread [FtRequestThread]...
+15:04:13:367,   [FtRequestThread] started, hThrRequest= 416
+15:04:13:368, Starting MMTimer... (mmRpTimerId= 16)
+15:04:13:369, ftMscLib is initialized ...
 
-14:52:32:697, OpenComDevice(), comStr= COM32
-14:52:34:790, ftxOpenComDevice(), ftHandle= 532
-14:52:34:791, Starting thread [ReadComThread]...
-14:52:34:792, Thread [ReadComThread] started..., hComRead= 536, IdComReadThread= 9516
-14:52:34:793, Open Fish.X1 connection...
-14:52:34:838, [SetFishX1InfoData] shmId= 0
-14:52:34:838,   Hostname          : ROBO TX-442
-14:52:34:839,   BtAddress         : 00:13:7B:54:AD:2B
-14:52:34:840,   Hardware Release  : C
-14:52:34:841,   Firmware Version  : V 1.30
-14:52:34:841,   DLL Version       : V 6
-14:52:34:842,   SharedMemoryStart : 0x20000204
-14:52:34:843,   AppAreaStart      : 0x30700000
-14:52:34:843,   AppAreaSize       : 0x000D0000
-14:52:34:860, Initialization output and config area...
-14:52:34:860, Info Master/Slave alive:  M  0  0  0  0  0  0  0  0
-14:52:34:861, InitTransferValues, Initialization of TransferArea (output)...
-14:52:34:963, SendRemoteCmd, XM_START: send remote command: 'get_ser_num'
-14:52:35:019, SendRemoteCmd, XM_GET_PROMPT: ROBO TX prompt received...
-14:52:35:019, serial_number= [0002085096]
-14:52:35:020, Starting Fish.X1 transfer...
-14:52:35:021, SetFishX1TransferStatus, set status = 2
-14:52:35:326, SetFishX1TransferStatus, set status = 1
-14:52:35:327, Fish.X1 transfer running...
-14:52:39:550, GetTransferAreasArrayAddr, fthdl= 532
-14:54:18:044, GetTransferAreasArrayAddr, fthdl= 532
-14:54:39:862, GetTransferAreasArrayAddr, fthdl= 532
-14:55:16:575, GetTransferAreasArrayAddr, fthdl= 532
-14:55:33:204, GetTransferAreasArrayAddr, fthdl= 532
-14:56:15:422, GetTransferAreasArrayAddr, fthdl= 532
+15:04:13:424, OpenComDevice(), comStr= COM32
+15:04:13:425, ftxOpenComDevice(), ftHandle= 548
+15:04:13:425, Starting thread [ReadComThread]...
+15:04:13:426, Thread [ReadComThread] started..., hComRead= 556, IdComReadThread= 10924
+15:04:13:426, Open Fish.X1 connection...
+15:04:13:469, [SetFishX1InfoData] shmId= 0
+15:04:13:469,   Hostname          : ROBO TX-442
+15:04:13:469,   BtAddress         : 00:13:7B:54:AD:2B
+15:04:13:470,   Hardware Release  : C
+15:04:13:470,   Firmware Version  : V 1.30
+15:04:13:471,   DLL Version       : V 6
+15:04:13:471,   SharedMemoryStart : 0x20000204
+15:04:13:472,   AppAreaStart      : 0x30700000
+15:04:13:472,   AppAreaSize       : 0x000D0000
+15:04:13:495, Initialization output and config area...
+15:04:13:495, Info Master/Slave alive:  M  0  0  0  0  0  0  0  0
+15:04:13:496, InitTransferValues, Initialization of TransferArea (output)...
+15:04:13:598, SendRemoteCmd, XM_START: send remote command: 'get_ser_num'
+15:04:13:650, SendRemoteCmd, XM_GET_PROMPT: ROBO TX prompt received...
+15:04:13:650, serial_number= [0002085096]
+15:04:13:651, Starting Fish.X1 transfer...
+15:04:13:652, SetFishX1TransferStatus, set status = 2
+15:04:13:928, SetFishX1TransferStatus, set status = 1
+15:04:13:929, Fish.X1 transfer running...
+15:04:47:197, GetTransferAreasArrayAddr, fthdl= 548
+15:04:51:392, GetTransferAreasArrayAddr, fthdl= 548
+15:04:56:375, GetTransferAreasArrayAddr, fthdl= 548

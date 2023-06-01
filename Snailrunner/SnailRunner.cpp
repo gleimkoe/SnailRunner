@@ -258,7 +258,7 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 	const int THRESHOLD_DISTANCE_LOW = 30;
 	const int THRESHOLD_DISTANCE_HIGH = 40;
 	int THRESHOLD_DISTANCE = threshold_distance;
-	int THRESHOLD_DISTANCE_SIDE = threshold_distance_side;
+	int THRESHOLD_DISTANCE_SIDE = threshold_distance_no_side;
 	const int THRESHOLD_COLOR_GRAU_WEISS = 1300;
 	const int THRESHOLD_COLOR_GRAU_SCHWARZ = 1600;
 	const int THRESHOLD_COLOR_BACK_MIN = 1000;
@@ -534,6 +534,13 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			if (dis_side >= THRESHOLD_DISTANCE_SIDE && last_dis_side < THRESHOLD_DISTANCE_SIDE) {
 				sl_state->handle(StartLauferMachine::Event::NO_SIDEWALL);
 			}
+			else if (dis_side <= threshold_distance_side_close && last_dis_side >= threshold_distance_side_close && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
+				sl_state->handle(StartLauferMachine::Event::TOO_CLOSE);
+			}
+			else if (dis_side >= threshold_distance_side_close && dis_side <= threshold_distance_side_far && last_dis_side >= threshold_distance_side_close && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
+				sl_state->handle(StartLauferMachine::Event::TOO_FAR);
+			}
+			
 			last_dis_side = dis_side;
 		}
 	}

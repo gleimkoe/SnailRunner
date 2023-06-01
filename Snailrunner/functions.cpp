@@ -35,7 +35,7 @@ void calibrationMenu(SnailRunner* robot)
             std::cout << "Untere Graugrenze:   " << robot->threshold_grey_low << std::endl;
             std::cout << "oberere Graugrenze: " << robot->threshold_grey_high << std::endl;
 			std::cout << "Distanzsensor vorne: " << robot->threshold_distance << std::endl;
-			std::cout << "Distanzsensor rechts: " << robot->threshold_distance_side << std::endl;
+			std::cout << "Distanzsensor rechts: " << robot->threshold_distance_no_side << std::endl;
 
             // std::cout << "grau:    " << grey << std::endl;
             std::cout << std::endl;
@@ -133,7 +133,7 @@ void calibrationMenu(SnailRunner* robot)
 			{
 				unsigned temp = 0;
 				std::cout << " --- Distanzsensor rechts --- " << std::endl;
-				std::cout << "aktueller Wert: " << robot->threshold_distance_side << std::endl;
+				std::cout << "aktueller Wert: " << robot->threshold_distance_no_side << std::endl;
 				std::cout << "neuer Wert:     ";
 
 				do
@@ -147,7 +147,7 @@ void calibrationMenu(SnailRunner* robot)
 					std::cin >> temp;
 				} while (temp > 3000);
 
-				robot->threshold_distance_side = temp;
+				robot->threshold_distance_no_side = temp;
 			}
             break;
         }
@@ -291,7 +291,7 @@ void calibrationMenu(SnailRunner* robot)
             file << robot->threshold_grey_low << std::endl;
             file << robot->threshold_grey_high << std::endl;
 			file << robot->threshold_distance << std::endl;
-			file << robot->threshold_distance_side << std::endl;
+			file << robot->threshold_distance_no_side << std::endl;
 
 
             file.close();
@@ -321,7 +321,7 @@ void calibrationMenu(SnailRunner* robot)
                 robot->threshold_grey_low =  1500;
                 robot->threshold_grey_high = 1600;
 				robot->threshold_distance = 10;
-				robot->threshold_distance_side = 30;
+				robot->threshold_distance_no_side = 30;
 
                 std::cout << "Tippe 'ok' um ins Hauptmenue zu gelangen." << std::endl;
                 std::string dummy;
@@ -346,7 +346,7 @@ void calibrationMenu(SnailRunner* robot)
 				std::cout << "Distanzsensor vorne: " << temp << std::endl;
 
 				std::getline(file, temp);
-				robot->threshold_distance_side = stoi(temp);
+				robot->threshold_distance_no_side = stoi(temp);
 				std::cout << "Distanzsensor rechts: " << temp << std::endl;
 
 

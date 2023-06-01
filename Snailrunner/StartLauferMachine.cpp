@@ -33,13 +33,15 @@ const std::map<StartLauferMachine::State, std::string> StartLauferMachine::State
 	{ State::BACK_2, "BACK_2" },
 	{ State::ALLIGN_1, "ALLIGN_1" },
 	{ State::ALLIGN_2, "ALLIGN_2" },
+	{State::CORRECT_TO_LEFT, "CORRECT_TO_LEFT"},
+	{State::CORRECT_TO_RIGHT, "CORRECT_TO_RIGHT"},
 	{State::VOR_FINAL, "VOR_FINAL"},
 	{ State::FINAL, "FINAL" }
 	/* --INFO: Here you should add new states for debugging purpose. */
 };
 
 const std::map<StartLauferMachine::Event, std::string> StartLauferMachine::EventDescription = {
-		
+
 	{ Event::WALL_AHEAD, "WALL_AHEAD" },
 	{ Event::NOT_WALL_AHEAD, "NOT_WALL_AHEAD" },
 	{ Event::OFF_TRAIL, "OFF_TRAIL" },
@@ -48,8 +50,10 @@ const std::map<StartLauferMachine::Event, std::string> StartLauferMachine::Event
 	{ Event::ON_GREY, "ON_GREY" },
 	{ Event::LICHT_HINTEN, "LICHT_HINTEN"},
 	{ Event::NOT_LICHT_HINTEN, "NOT_LICHT_HINTEN"},
-	{ Event::NO_SIDEWALL, "NO_SIDEWALL"}
-	
+	{ Event::NO_SIDEWALL, "NO_SIDEWALL"},
+	{Event::TOO_CLOSE, "TOO_CLOSE"},
+	{Event::TOO_FAR, "TOO_FAR"}
+
 	/* --INFO: Here you should add new events for debugging purpose. */
 };
 
@@ -81,6 +85,7 @@ void StartLauferMachine::start() {
 	robot->controller()->annotate("RE/START START STATE MACHINE");
 	/* --Set everything to initial values. */
 	count = 1;
+
 
 	/* --Start with initial transition. */
 	onEnteringStart();
@@ -142,6 +147,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingStart(); onEnteringFailure();
 		}
 		break;
@@ -166,6 +175,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingSuchen(); onEnteringFailure();
 		}
@@ -192,6 +205,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default:onLeavingAusrichten(); onEnteringFailure();
 		}
 		break;
@@ -213,7 +230,7 @@ void StartLauferMachine::transition(Event ev) {
 				onLeavingAusrichten_2(); onEnteringAusrichten_3();
 			}
 			break;
-		case StartLauferMachine::Event::ON_GREY: 
+		case StartLauferMachine::Event::ON_GREY:
 			if (robot->start_position == true)
 			{
 				onLeavingAusrichten_2(); onEnteringAusrichten_3();
@@ -224,6 +241,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default:onLeavingAusrichten_2(); onEnteringFailure();
 		}
@@ -238,20 +259,20 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::OFF_TRAIL:
 			break;
-		case StartLauferMachine::Event::ON_TRAIL: 
-			if (robot ->start_position == true) // STARTLAUFER
+		case StartLauferMachine::Event::ON_TRAIL:
+			if (robot->start_position == true) // STARTLAUFER
 			{
 				onLeavingAusrichten_3(); onEnteringOnTrail(); logLapBanner(robot, file);
 			}
 			else
 			{
-				onLeavingAusrichten_3(); onEnteringEnde(); 
+				onLeavingAusrichten_3(); onEnteringEnde();
 			}
 			break;
 		case StartLauferMachine::Event::IS_STOPPED:
 			/*if (robot->start_position == false)
 			{
-				onLeavingAusrichten_3(); onEnteringAusrichten_4(); 
+				onLeavingAusrichten_3(); onEnteringAusrichten_4();
 			}*/
 			break;
 		case StartLauferMachine::Event::ON_GREY: onLeavingAusrichten_3(); onEnteringAusrichten_3();
@@ -262,46 +283,50 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default:onLeavingAusrichten_3(); onEnteringFailure();
-			
+
 		}
 		break;
 
-	/*case State::AUSRICHTEN_4:
-		switch (ev)
-		{
-		case StartLauferMachine::Event::WALL_AHEAD:
+		/*case State::AUSRICHTEN_4:
+			switch (ev)
+			{
+			case StartLauferMachine::Event::WALL_AHEAD:
+				break;
+			case StartLauferMachine::Event::NOT_WALL_AHEAD:
+				break;
+			case StartLauferMachine::Event::OFF_TRAIL:
+				break;
+			case StartLauferMachine::Event::ON_TRAIL: onLeavingAusrichten_4(); onEnteringEnde() ; logLapBanner(robot, file);
+				break;
+			case StartLauferMachine::Event::IS_STOPPED:
+				break;
+			case StartLauferMachine::Event::ON_GREY:
+				break;
+			case StartLauferMachine::Event::LICHT_HINTEN:
+				break;
+			case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+				break;
+			case StartLauferMachine::Event::NO_SIDEWALL:
+				break;
+			default: onLeavingAusrichten_4(); onEnteringFailure();
+
+			}
 			break;
-		case StartLauferMachine::Event::NOT_WALL_AHEAD:
-			break;
-		case StartLauferMachine::Event::OFF_TRAIL:
-			break;
-		case StartLauferMachine::Event::ON_TRAIL: onLeavingAusrichten_4(); onEnteringEnde() ; logLapBanner(robot, file);
-			break;
-		case StartLauferMachine::Event::IS_STOPPED:
-			break;
-		case StartLauferMachine::Event::ON_GREY:
-			break;
-		case StartLauferMachine::Event::LICHT_HINTEN:
-			break;
-		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
-			break;
-		case StartLauferMachine::Event::NO_SIDEWALL:
-			break;
-		default: onLeavingAusrichten_4(); onEnteringFailure();
-			
-		}
-		break;
-		*/
+			*/
 	case State::ON_TRAIL:
 		switch (ev)
 		{
-		case StartLauferMachine::Event::WALL_AHEAD: 
-			if ( robot->current_corner < 4)
+		case StartLauferMachine::Event::WALL_AHEAD:
+			if (robot->current_corner < 4)
 			{
 				onLeavingOnTrail(); onEnteringObstacleDetected();
 			}
-		
+
 			break;
 		case StartLauferMachine::Event::NOT_WALL_AHEAD:
 			break;
@@ -311,8 +336,8 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::IS_STOPPED:onLeavingOnTrail(); onEnteringOnTrail();
 			break;
-		case StartLauferMachine::Event::ON_GREY:  
-			 if (robot->current_corner >= 4) // && robot ->current_lap <= robot ->lap_amount)
+		case StartLauferMachine::Event::ON_GREY:
+			if (robot->current_corner >= 4) // && robot ->current_lap <= robot ->lap_amount)
 			{
 				cout << "ON_TRAIL ZU RELAY" << endl;
 				onLeavingOnTrail(); onEnteringRelay();
@@ -320,10 +345,10 @@ void StartLauferMachine::transition(Event ev) {
 			/*
 			else if (robot->current_corner >= 4 && robot->current_lap == robot->lap_amount)
 			{
-				
+
 				cout << "ON_TRAIL ZU VOR_FINAL" << endl;
 				onLeavingOnTrail(); onEnteringVorFinal();
-				
+
 			}
 			*/
 			break;
@@ -332,6 +357,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingOnTrail(); onEnteringFailure();
 		}
@@ -358,6 +387,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingOffTrail(); onEnteringFailure();
 		}
 		break;
@@ -382,6 +415,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingStopping(); onEnteringFailure();
 		}
@@ -408,6 +445,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingCorrectTrailLeft(); onEnteringFailure();
 		}
 		break;
@@ -433,6 +474,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onEnteringFailure();
 		}
 		break;
@@ -441,20 +486,20 @@ void StartLauferMachine::transition(Event ev) {
 		switch (ev)
 		{
 		case StartLauferMachine::Event::WALL_AHEAD:
-			if (robot->start_position == false && robot ->current_lap == robot ->lap_amount)
+			if (robot->start_position == false && robot->current_lap == robot->lap_amount)
 			{
 				getElapsedTime(robot);
 				logLapConclusion(robot, file);
 				cout << "RUNDE_CNT" << endl;
 				onLeavingRelay(); onEnteringFinal();
 			}
-			else 
+			else
 			{
 				onLeavingRelay(); onEnteringLampeGray();
 			}
-			
+
 			break;
-		case StartLauferMachine::Event::NOT_WALL_AHEAD: 
+		case StartLauferMachine::Event::NOT_WALL_AHEAD:
 			break;
 		case StartLauferMachine::Event::OFF_TRAIL:
 			break;
@@ -470,6 +515,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default:onLeavingRelay(); onEnteringFailure();
 
 		}
@@ -478,13 +527,13 @@ void StartLauferMachine::transition(Event ev) {
 	case State::LAMPE_GRAY:
 		switch (ev)
 		{
-		case StartLauferMachine::Event::WALL_AHEAD: 
+		case StartLauferMachine::Event::WALL_AHEAD:
 			break;
-		case StartLauferMachine::Event::NOT_WALL_AHEAD: 
+		case StartLauferMachine::Event::NOT_WALL_AHEAD:
 			if (robot->current_corner >= 4 && robot->current_lap < robot->lap_amount)
 			{
 				cout << "LAMPE_GRAY ZU READY" << endl;
-				onLeavingLampeGray(); onEnteringReady(); 
+				onLeavingLampeGray(); onEnteringReady();
 				logLapConclusion(robot, file);
 				robot->current_lap = robot->current_lap + 1;
 			}
@@ -500,7 +549,7 @@ void StartLauferMachine::transition(Event ev) {
 					cout << "LAMPE_GRAY ZU FINAL" << endl;
 					onLeavingLampeGray(); onEnteringFinal();
 				}*/
-				
+
 
 			}
 			break;
@@ -517,6 +566,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onEnteringFailure();
 		}
@@ -537,11 +590,15 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::ON_GREY: onLeavingReady(); onEnteringReady();
 			break;
-		case StartLauferMachine::Event::LICHT_HINTEN: 
+		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onEnteringFailure();
 		}
@@ -568,11 +625,15 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default:onLeavingEnde(); onEnteringFailure();
 		}
 		break;
 
-	/* ------ HINDERNIS UMFAHREN -------------*/
+		/* ------ HINDERNIS UMFAHREN -------------*/
 
 	case State::OBSTACLE_DETECTED:
 		switch (ev)
@@ -594,6 +655,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingObstacleDetected(); onEnteringFailure();
 
@@ -621,6 +686,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingEvasion1(); onEnteringFailure();
 
 		}
@@ -646,6 +715,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingEvasion2(); onEnteringFailure();
 
@@ -673,6 +746,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingEvasion3(); onEnteringFailure();
 
 		}
@@ -698,6 +775,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:  
 			break;
 		default: onLeavingEvasion4(); onEnteringFailure();
 
@@ -725,7 +806,71 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:onLeavingEvasion5();  onEnteringCorrectToLeft();
+			break;
+		case StartLauferMachine::Event::TOO_FAR:onLeavingEvasion5(); onEnteringCorrectToRight();
+			break;
 		default: onLeavingEvasion5(); onEnteringFailure();
+
+		}
+		break;
+
+	case State::CORRECT_TO_LEFT:
+		switch (ev)
+		{
+		case StartLauferMachine::Event::WALL_AHEAD:
+			break;
+		case StartLauferMachine::Event::NOT_WALL_AHEAD:
+			break;
+		case StartLauferMachine::Event::OFF_TRAIL:
+			break;
+		case StartLauferMachine::Event::ON_TRAIL:
+			break;
+		case StartLauferMachine::Event::IS_STOPPED:onLeavingCorrectToLeft(); onEnteringEvasion5();
+			break;
+		case StartLauferMachine::Event::ON_GREY:
+			break;
+		case StartLauferMachine::Event::LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:  onLeavingCorrectToLeft(); onEnteringCorrectToRight();
+			break;
+		default: onLeavingCorrectToLeft(); onEnteringFailure();
+
+		}
+		break;
+
+	case State::CORRECT_TO_RIGHT:
+		switch (ev)
+		{
+		case StartLauferMachine::Event::WALL_AHEAD:
+			break;
+		case StartLauferMachine::Event::NOT_WALL_AHEAD:
+			break;
+		case StartLauferMachine::Event::OFF_TRAIL:
+			break;
+		case StartLauferMachine::Event::ON_TRAIL:
+			break;
+		case StartLauferMachine::Event::IS_STOPPED:onLeavingCorrectToRight(); onEnteringEvasion5();
+			break;
+		case StartLauferMachine::Event::ON_GREY:
+			break;
+		case StartLauferMachine::Event::LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::NO_SIDEWALL:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:  onLeavingCorrectToRight(); onEnteringCorrectToLeft();
+			break;
+		default: onLeavingCorrectToRight(); onEnteringFailure();
 
 		}
 		break;
@@ -750,6 +895,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingEvasion6(); onEnteringFailure();
 
@@ -778,6 +927,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingBack1(); onEnteringFailure();
 
 		}
@@ -803,6 +956,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingBack2(); onEnteringFailure();
 
@@ -830,6 +987,10 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingAllign1(); onEnteringFailure();
 
 		}
@@ -855,6 +1016,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default: onLeavingAllign2(); onEnteringFailure();
 
@@ -882,8 +1047,12 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
+			break;
 		default: onLeavingVorFinal(); onEnteringFailure();
-			
+
 		}
 		break;
 
@@ -905,6 +1074,10 @@ void StartLauferMachine::transition(Event ev) {
 		case StartLauferMachine::Event::LICHT_HINTEN:
 			break;
 		case StartLauferMachine::Event::NOT_LICHT_HINTEN:
+			break;
+		case StartLauferMachine::Event::TOO_CLOSE:
+			break;
+		case StartLauferMachine::Event::TOO_FAR:
 			break;
 		default:;
 		}
@@ -949,7 +1122,7 @@ void StartLauferMachine::onEnteringAusrichten_2() { // turn(-180)
 	{
 		robot->turn(70);
 	}
-	
+
 
 	cout << "Ausrichten_2" << endl;
 }
@@ -964,7 +1137,7 @@ void StartLauferMachine::onEnteringAusrichten_3() {
 	{
 		robot->turn(7.5);
 	}*/
-	
+
 	robot->lampright().on();
 	cout << "Ausrichten_3" << endl;
 }
@@ -986,7 +1159,7 @@ void StartLauferMachine::onEnteringOnTrail() {// forward
 void StartLauferMachine::onEnteringOffTrail() {// stop
 	logOFF_TRAIL(robot, file);
 	state(State::OFF_TRAIL);
-	
+
 	robot->stop();
 	cout << "OffTrail" << endl;
 }
@@ -1010,7 +1183,7 @@ void StartLauferMachine::onEnteringCorrectTrailRight() { // turn()
 		}
 		*/
 		cout << "Ecke Nr. : " << robot->current_corner << endl;
-		
+
 	}
 	robot->turn(count * -7.5);
 	cout << "CorrectRight" << endl;
@@ -1051,37 +1224,37 @@ void StartLauferMachine::onEnteringLampeGray() {
 	robot->stop();
 	robot->lampfront().on();
 	//robot ->current_lap = robot->current_lap + 1;
-	
+
 	cout << "LampeGray" << endl;
-	
+
 	cout << "Staffel Übergabe" << endl;
-	
+
 }
 
 void StartLauferMachine::onEnteringReady() {
 	state(State::READY);
 
-	cout << "Runde Nr: " << robot-> current_lap << endl;
+	cout << "Runde Nr: " << robot->current_lap << endl;
 	//logLapConclusion(robot, file);
-	robot ->current_corner = 0;
+	robot->current_corner = 0;
 	robot->lampfront().off();
 	robot->lampright().off();
-	robot->forward(1, METER);	
+	robot->forward(1, METER);
 	cout << "Ready" << endl;
 }
 
 void StartLauferMachine::onEnteringRelay() {
 	state(State::RELAY);
-	robot->forward(0.5,METER);
+	robot->forward(0.5, METER);
 	//robot->stop();
-	
+
 	cout << "RELAY" << endl;
 }
 
 void StartLauferMachine::onEnteringEnde() {
 	state(State::ENDE);
 	robot->stop();
-	
+
 	cout << "Ende" << endl;
 }
 
@@ -1094,7 +1267,7 @@ void StartLauferMachine::onEnteringVorFinal() {
 }
 
 void StartLauferMachine::onLeavingAusrichten() {} // Stop
-	
+
 void StartLauferMachine::onLeavingAusrichten_2() {
 	robot->stop();
 	cout << "AUSRICHTEN_2 STOP" << endl;
@@ -1135,13 +1308,13 @@ void StartLauferMachine::onLeavingStart()
 	}
 }
 
-void StartLauferMachine::onLeavingSuchen(){ // Stop
+void StartLauferMachine::onLeavingSuchen() { // Stop
 	robot->stop();
 }
 
 void StartLauferMachine::onLeavingLampeGray() {}
 
-void StartLauferMachine::onLeavingRelay(){}
+void StartLauferMachine::onLeavingRelay() {}
 
 void StartLauferMachine::onLeavingEnde() {}
 
@@ -1227,6 +1400,18 @@ void StartLauferMachine::onEnteringAllign2() {
 
 }
 
+void StartLauferMachine::onEnteringCorrectToLeft() {
+	state(State::CORRECT_TO_LEFT);
+	robot->turn(5);
+	cout << "CORRECT_TO_LEFT" << endl;
+}
+
+void StartLauferMachine::onEnteringCorrectToRight() {
+	state(State::CORRECT_TO_RIGHT);
+	robot->turn(-5);
+	cout << "CORRECT_TO_RIGHT" << endl;
+}
+
 void StartLauferMachine::onLeavingObstacleDetected() {}
 
 void StartLauferMachine::onLeavingEvasion1() {
@@ -1252,3 +1437,7 @@ void StartLauferMachine::onLeavingBack2() {}
 void StartLauferMachine::onLeavingAllign1() {}
 
 void StartLauferMachine::onLeavingAllign2() {}
+
+void StartLauferMachine::onLeavingCorrectToLeft() {}
+
+void StartLauferMachine::onLeavingCorrectToRight() {}
