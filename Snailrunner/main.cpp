@@ -245,9 +245,48 @@ void menue() {
 
 		double val=0.0;
 		RunUnit unit=IMPULSE;
+
+		cout << "\n [K] Kalibierung \n"
+			<< " [E] Einstellungen \n"
+			<< " [S] Staffellauf \n"
+			<< " Eingabe: "
+			<< endl;
+		char input ;
+		cin >> input;
+		input = tolower(input);
+		char dummy[256];
+
+		// Check user 's wish
+		switch (input)
+		{
+		case 'e':
+			StartSupervision(runner, NON_REACTIVE);
+			settingsMenu(runner);
+			StopSupervision();
+			break;
+		
+		case 'k':
+			StartSupervision(runner, NON_REACTIVE);
+			calibrationMenu(runner);
+			StopSupervision();
+			break;
+
+		case 's':
+			runner->activate(SnailRunner::START_LAUFER_MISSION);
+			StartSupervision(runner);
+
+			cout << "Start Laufer Machine is running!!" << endl
+				<< "Enter 'OK' to stop: " << flush;
+			cin >> dummy;
+			StopSupervision();
+			break;
+		};
+
+
+
 		
 
-		cout << "\n[W] Write Data To File (ToDo in Termin 2)\n"
+		/* cout << "\n[W] Write Data To File (ToDo in Termin 2)\n"
 			 << "[A] Turn Via Angle (ToDo in Termin 3)\n"
 			 << "    --------------------------------\n"
 			 << "[T] Test Lamps\n"
@@ -321,7 +360,7 @@ void menue() {
 			StopSupervision();
 			break;
 		case '1' :
-			/* --Mission setzen. */
+			/* --Mission setzen. 
 			runner->activate(SnailRunner::EXPLORE_MISSION);
 			StartSupervision(runner);
 			cout << "Explore I is running!" << endl
@@ -331,7 +370,7 @@ void menue() {
 			StopSupervision();
 			break;
 		case '2' :
-			/* --Mission setzen. */
+			/* --Mission setzen. 
 			runner->activate(SnailRunner::OBSTACLE_MISSION);
 			StartSupervision(runner);
 			cout << "Obstacle is running!! Enter 'OK' to stop: " << flush;
@@ -339,7 +378,7 @@ void menue() {
 			StopSupervision();
 			break;
 		case '3':
-			/* --Mission setzen. */
+			/* --Mission setzen. 
 			runner->activate(SnailRunner::FORWARD_MISSION);
 			StartSupervision(runner);
 			cout << "Explore II is running!!" << endl
@@ -349,7 +388,7 @@ void menue() {
 			StopSupervision();
 			break;
 		case '4':
-			/* --Mission setzen. */
+			/* --Mission setzen. 
 			int SollEcke;
 			cout << "Anzahl der Ecken eingeben:";
 			cin >> SollEcke; 
@@ -397,8 +436,9 @@ void menue() {
 				 << "Enter 'OK' to stop: " << flush;
 			cin >> dummy;
 			StopSupervision();
-			break;
-		} ;
+			break; 
+			
+		} ;*/
 		cin.seekg(0, ios::end);
 		cin.clear();
 	}

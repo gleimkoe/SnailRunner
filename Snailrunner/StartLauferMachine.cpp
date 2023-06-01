@@ -707,7 +707,7 @@ void StartLauferMachine::transition(Event ev) {
 	case State::EVASION_5:
 		switch (ev)
 		{
-		case StartLauferMachine::Event::IS_STOPPED:
+		case StartLauferMachine::Event::IS_STOPPED: onLeavingEvasion5(); onEnteringEvasion5();
 			break;
 		case StartLauferMachine::Event::WALL_AHEAD:
 			break;
