@@ -48,6 +48,7 @@ const std::map<StartLauferMachine::Event, std::string> StartLauferMachine::Event
 	{ Event::ON_TRAIL, "ON_TRAIL" },
 	{ Event::IS_STOPPED, "IS_STOPPED" },
 	{ Event::ON_GREY, "ON_GREY" },
+	//{ Event::OFF_GREY, "OFF_GREY" },
 	{ Event::LICHT_HINTEN, "LICHT_HINTEN"},
 	{ Event::NOT_LICHT_HINTEN, "NOT_LICHT_HINTEN"},
 	{ Event::NO_SIDEWALL, "NO_SIDEWALL"},
@@ -838,7 +839,7 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::TOO_CLOSE:
 			break;
-		case StartLauferMachine::Event::TOO_FAR:  onLeavingCorrectToLeft(); onEnteringCorrectToRight();
+		case StartLauferMachine::Event::TOO_FAR: // onLeavingCorrectToLeft(); onEnteringCorrectToRight();
 			break;
 		default: onLeavingCorrectToLeft(); onEnteringFailure();
 
@@ -866,9 +867,9 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NO_SIDEWALL:
 			break;
-		case StartLauferMachine::Event::TOO_CLOSE:
+		case StartLauferMachine::Event::TOO_CLOSE://onLeavingCorrectToRight(); onEnteringCorrectToLeft();
 			break;
-		case StartLauferMachine::Event::TOO_FAR:  onLeavingCorrectToRight(); onEnteringCorrectToLeft();
+		case StartLauferMachine::Event::TOO_FAR:  
 			break;
 		default: onLeavingCorrectToRight(); onEnteringFailure();
 
@@ -1402,13 +1403,13 @@ void StartLauferMachine::onEnteringAllign2() {
 
 void StartLauferMachine::onEnteringCorrectToLeft() {
 	state(State::CORRECT_TO_LEFT);
-	robot->turn(5);
+	robot->turn(6);
 	cout << "CORRECT_TO_LEFT" << endl;
 }
 
 void StartLauferMachine::onEnteringCorrectToRight() {
 	state(State::CORRECT_TO_RIGHT);
-	robot->turn(-5);
+	robot->turn(-6);
 	cout << "CORRECT_TO_RIGHT" << endl;
 }
 

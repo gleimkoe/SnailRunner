@@ -2,37 +2,32 @@
 Position: 	  Startlaeufer
 Fahrtrichtung:    Uhrzeigersinn
 Rundenanzahl:     1
-Startzeit:        15:57:05
+Startzeit:        17:01:24
 *********************************
 
 
 ---------------------------------
              Runde 1
 ---------------------------------
-Abweichung	  9.95s
-1. Ecke           12.125
-Abweichung	  13.971s
-Abweichung	  15.662s
-Abweichung	  18.601s
-2. Ecke           20.785
-Abweichung	  22.757s
-Abweichung	  24.408s
-Hindernis         27.409s
-Abweichung	  42.211s
-Abweichung	  43.408s
-Abweichung	  44.99s
-3. Ecke           47.171
-Abweichung	  49.179s
-Abweichung	  50.845s
-Abweichung	  53.617s
-4. Ecke           55.789
-Abweichung	  57.719s
-Abweichung	  59.413s
-
-1. Runde abgeschlossen:
-Zeit:             67.941s
-Abweichungen:     14
-Hindernisse:      1
-Strecke:          2.1101m
-
-
+Abweichung	  4.052s
+Abweichung	  7.762s
+1. Ecke           9.734
+Abweichung	  11.578s
+Abweichung	  12.98s
+Abweichung	  15.415s
+2. Ecke           17.45
+Abweichung	  19.21s
+Abweichung	  20.623s
+Hindernis         22.845s
+Abweichung	  35.337s
+Abweichung	  36.412s
+Abweichung	  38.609s
+3. Ecke           40.665
+Abweichung	  42.619s
+Abweichung	  43.954s
+Abweichung	  46.779s
+4. Ecke           48.819
+Abweichung	  50.713s
+Abweichung	  52.28s
+Abweichung	  62.88s
+5. Ecke           65.49

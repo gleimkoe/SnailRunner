@@ -155,13 +155,13 @@ void SnailRunner::turn(double grad) {
 	if (grad > 0)
 	{
 		val = grad * grad_in_impulse * uebersetzungsverhaeltnis_getriebe * radUmdrehungproGrad;
-		leftmotor.turnOn(val, unit, speed, RIGHT, LEFT); // wenn Drehwinkel >0 dann dreht rechts
+		leftmotor.turnOn(val, unit, speed, RIGHT, LEFT); // wenn Drehwinkel >0 dann dreht links
 	}
 	else if (grad < 0)
 	{
 		double grad_neu = abs(grad);
 		val = grad_neu * grad_in_impulse * uebersetzungsverhaeltnis_getriebe * radUmdrehungproGrad;
-		leftmotor.turnOn(val, unit, speed, LEFT, RIGHT); // wenn Drehwinkel <0 dann dreht links
+		leftmotor.turnOn(val, unit, speed, LEFT, RIGHT); // wenn Drehwinkel <0 dann dreht rechts
 		//cout << grad_neu << endl;
 	}
 	else
@@ -238,8 +238,8 @@ void SnailRunner::onMotorStopped(Bitfield bfield) {
 			&& (greyvalues.at((greyvalues.size() - 3)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 3)) >= threshold_grey_low)
 			&& (greyvalues.at((greyvalues.size() - 4)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 4)) >= threshold_grey_low) 
 			&& (greyvalues.at((greyvalues.size() - 5)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 5)) >= threshold_grey_low)
-			&& (greyvalues.at((greyvalues.size() - 6)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 6)) >= threshold_grey_low)
-			&& (greyvalues.at((greyvalues.size() - 7)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 7)) >= threshold_grey_low))
+			&& (greyvalues.at((greyvalues.size() - 6)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 6)) >= threshold_grey_low) )
+			//&& (greyvalues.at((greyvalues.size() - 7)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 7)) >= threshold_grey_low))
 			{
 				returnvalue = true;
 			}
@@ -537,7 +537,7 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			else if (dis_side <= threshold_distance_side_close && last_dis_side >= threshold_distance_side_close && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
 				sl_state->handle(StartLauferMachine::Event::TOO_CLOSE);
 			}
-			else if (dis_side >= threshold_distance_side_close && dis_side <= threshold_distance_side_far && last_dis_side >= threshold_distance_side_close && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
+			else if ( dis_side >= threshold_distance_side_far && last_dis_side >= threshold_distance_side_close && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
 				sl_state->handle(StartLauferMachine::Event::TOO_FAR);
 			}
 			
