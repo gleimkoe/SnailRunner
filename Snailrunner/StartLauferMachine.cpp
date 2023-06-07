@@ -35,6 +35,10 @@ const std::map<StartLauferMachine::State, std::string> StartLauferMachine::State
 	{ State::ALLIGN_2, "ALLIGN_2" },
 	{State::CORRECT_TO_LEFT, "CORRECT_TO_LEFT"},
 	{State::CORRECT_TO_RIGHT, "CORRECT_TO_RIGHT"},
+<<<<<<< HEAD
+	//{State::OFF_GREY, "OFF_GREY"},
+=======
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	{State::VOR_FINAL, "VOR_FINAL"},
 	{ State::FINAL, "FINAL" }
 	/* --INFO: Here you should add new states for debugging purpose. */
@@ -258,7 +262,7 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NOT_WALL_AHEAD:
 			break;
-		case StartLauferMachine::Event::OFF_TRAIL:
+		case StartLauferMachine::Event::OFF_TRAIL: onLeavingAusrichten_3(); onEnteringOffTrail();
 			break;
 		case StartLauferMachine::Event::ON_TRAIL:
 			if (robot->start_position == true) // STARTLAUFER
@@ -583,7 +587,7 @@ void StartLauferMachine::transition(Event ev) {
 			break;
 		case StartLauferMachine::Event::NOT_WALL_AHEAD:
 			break;
-		case StartLauferMachine::Event::OFF_TRAIL:onLeavingReady(); onEnteringReady();
+		case StartLauferMachine::Event::OFF_TRAIL://onLeavingReady(); onEnteringReady();
 			break;
 		case StartLauferMachine::Event::ON_TRAIL:onLeavingReady(); onEnteringEnde();
 			break;
@@ -1115,11 +1119,19 @@ void StartLauferMachine::onEnteringAusrichten() { // forward(10cm)
 
 void StartLauferMachine::onEnteringAusrichten_2() { // turn(-180)
 	state(State::AUSRICHTEN_2);
+<<<<<<< HEAD
+	/*if (robot->start_position == true) // STARTLAUFER
+	{
+		robot->turn(180); // -180 rechts drehen
+	}
+	else*/
+=======
 	if (robot->start_position == true) // STARTLAUFER
 	{
 		robot->turn(/*robot->direction */ 180); // -180 rechts drehen
 	}
 	else
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	{
 		robot->turn(70);
 	}
@@ -1208,6 +1220,12 @@ void StartLauferMachine::onEnteringCorrectTrailLeft() { // turn()
 
 	robot->turn(count * 7.5);
 	cout << "CorrectLeft" << endl;
+}
+
+void StartLauferMachine::onEnteringStoppingGrey() {
+	//state(State::STOPPING_GREY);
+	robot->stop();
+	cout << "STOPPING_GREY" << endl;
 }
 
 void StartLauferMachine::onEnteringFinal() {
@@ -1299,6 +1317,9 @@ void StartLauferMachine::onLeavingCorrectTrailLeft() { // stop
 void StartLauferMachine::onLeavingCorrectTrailRight() {// stop
 	robot->stop();
 }
+
+void StartLauferMachine::onLeavingStoppingGrey() {}
+
 void StartLauferMachine::onLeavingFinal() {}
 
 void StartLauferMachine::onLeavingStart()
@@ -1334,82 +1355,229 @@ void StartLauferMachine::onEnteringObstacleDetected() {
 
 void StartLauferMachine::onEnteringEvasion1() {
 	state(State::EVASION_1);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->turn(90);
+		cout << "EVASION_1 UHR" << endl;
+	}
+	else
+	{
+		robot->turn(-90);
+		cout << "EVASION_1_GEGENUHR " << endl;
+	}
+	
+	
+=======
 	robot->turn(90);
 	cout << "EVASION_1" << endl;
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 }
 
 void StartLauferMachine::onEnteringEvasion2() {
 	state(State::EVASION_2);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->turn(40);// muss noch mal anpassen!!!
+	}
+	else
+	{
+		robot->turn(-40);
+	}
+	 
+=======
 	robot->turn(40); // muss noch mal anpassen!!!
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "EVASION_2" << endl;
 
 }
 
 void StartLauferMachine::onEnteringEvasion3() {
 	state(State::EVASION_3);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->forward(0.3, METER);
+	}
+	else
+	{
+		robot->backward(0.3, METER);
+	}
+	
+=======
 	robot->forward(0.3, METER);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "EVASION_3" << endl;
 
 }
 
 void StartLauferMachine::onEnteringEvasion4() {
 	state(State::EVASION_4);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->turn(-70);
+	}
+	else
+	{
+		robot->turn(-70);
+	}
+	
+=======
 	robot->turn(-70);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "EVASION_4" << endl;
 
 }
 
 void StartLauferMachine::onEnteringEvasion5() {
 	state(State::EVASION_5);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->forward(1, METER);
+	}
+	else
+	{
+		robot->backward(1, METER);
+	}
+	
+=======
 	robot->forward(1, METER);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "EVASION_5" << endl;
 
 }
 
 void StartLauferMachine::onEnteringEvasion6() {
 	state(State::EVASION_6);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->forward(0.08, METER);
+	}
+	else
+	{
+		robot->backward(0.08, METER);
+	}
+	
+=======
 	robot->forward(0.05, METER);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "EVASION_6" << endl;
 
 }
 
 void StartLauferMachine::onEnteringBack1() {
 	state(State::BACK_1);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->turn(-70);
+	}
+	else
+	{
+		robot->turn(70);
+	}
+	
+=======
 	robot->turn(-70);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "BACK_1" << endl;
 
 }
 
 void StartLauferMachine::onEnteringBack2() {
 	state(State::BACK_2);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->forward(1, METER);
+	}
+	else
+	{
+		robot->forward(1, METER);
+	}
+	
+=======
 	robot->forward(1, METER);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "BACK_2" << endl;
 
 }
 
 void StartLauferMachine::onEnteringAllign1() {
 	state(State::ALLIGN_1);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->forward(0.1, METER);
+	}
+	else
+	{
+		robot->forward(0.1, METER);
+	}
+	
+=======
 	robot->forward(0.1, METER);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "ALLIGN_1" << endl;
 
 }
 
 void StartLauferMachine::onEnteringAllign2() {
 	state(State::ALLIGN_2);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->turn(180);
+	}
+	else
+	{
+		robot->turn(180);
+	}
+	
+=======
 	robot->turn(180);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "ALLIGN_2" << endl;
 
 }
 
 void StartLauferMachine::onEnteringCorrectToLeft() {
 	state(State::CORRECT_TO_LEFT);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->turn(6);
+	}
+	else
+	{
+		robot->turn(6);
+	}
+	
+=======
 	robot->turn(6);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "CORRECT_TO_LEFT" << endl;
 }
 
 void StartLauferMachine::onEnteringCorrectToRight() {
 	state(State::CORRECT_TO_RIGHT);
+<<<<<<< HEAD
+	if (robot->direction == 1)
+	{
+		robot->turn(-6);
+	}
+	else
+	{
+		robot->turn(-6);
+	}
+	
+=======
 	robot->turn(-6);
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 	cout << "CORRECT_TO_RIGHT" << endl;
 }
 

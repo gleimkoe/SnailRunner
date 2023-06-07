@@ -1,5 +1,40 @@
 *********************************
 Position: 	  Startlaeufer
+<<<<<<< HEAD
+Fahrtrichtung:    gegen den Uhrzeigersinn
+Rundenanzahl:     1
+Startzeit:        15:33:32
+*********************************
+
+
+Abweichung	  8.559s
+Abweichung	  9.632s
+Abweichung	  13.494s
+1. Ecke           15.805
+Abweichung	  18.023s
+Abweichung	  21.157s
+2. Ecke           23.416
+Abweichung	  25.454s
+Hindernis         28.432s
+Abweichung	  40.769s
+Abweichung	  42.911s
+Abweichung	  45.26s
+Abweichung	  47.307s
+3. Ecke           49.588
+Abweichung	  51.508s
+Abweichung	  54.298s
+Abweichung	  55.718s
+4. Ecke           57.972
+Abweichung	  60.131s
+
+1. Runde abgeschlossen:
+Zeit:             303.974s
+Abweichungen:     14
+Hindernisse:      1
+Strecke:          2.56302m
+
+
+=======
 Fahrtrichtung:    Uhrzeigersinn
 Rundenanzahl:     1
 Startzeit:        17:01:24
@@ -31,3 +66,4 @@ Abweichung	  50.713s
 Abweichung	  52.28s
 Abweichung	  62.88s
 5. Ecke           65.49
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75

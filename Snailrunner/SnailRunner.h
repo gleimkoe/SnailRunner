@@ -103,12 +103,21 @@ public:
 	int grey = 1400;
 
 	// threshold values Farbsensor unten
+<<<<<<< HEAD
+	int threshold_grey_low = 935;//1500;
+	int threshold_grey_high = 1932;//1600;
+	int threshold_distance= 10;
+	int threshold_distance_side_close = 5;
+	int threshold_distance_side_far = 18;
+	int threshold_distance_no_side = 20;
+=======
 	int threshold_grey_low = 1684;//1500;
 	int threshold_grey_high = 1963;//1600;
 	int threshold_distance= 10;
 	int threshold_distance_side_close = 5;
 	int threshold_distance_side_far = 18;
 	int threshold_distance_no_side = 30;
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 
 	vector<int> greyvalues;
 
@@ -125,7 +134,7 @@ public:
 
 	//  1 - clockwise
 	// -1 - counterclockwise
-	int direction = 1;
+	int direction = -1;
 
 	// amount of laps
 	int lap_amount = 1;		// SollRunde

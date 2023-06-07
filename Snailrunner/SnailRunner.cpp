@@ -238,8 +238,19 @@ void SnailRunner::onMotorStopped(Bitfield bfield) {
 			&& (greyvalues.at((greyvalues.size() - 3)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 3)) >= threshold_grey_low)
 			&& (greyvalues.at((greyvalues.size() - 4)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 4)) >= threshold_grey_low) 
 			&& (greyvalues.at((greyvalues.size() - 5)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 5)) >= threshold_grey_low)
+<<<<<<< HEAD
+			&& (greyvalues.at((greyvalues.size() - 6)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 6)) >= threshold_grey_low) //)
+			&& (greyvalues.at((greyvalues.size() - 7)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 7)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 8)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 8)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 9)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 9)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 10)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 10)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 11)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 11)) >= threshold_grey_low)
+			&& (greyvalues.at((greyvalues.size() - 12)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 12)) >= threshold_grey_low))
+			//&& (greyvalues.at((greyvalues.size() - 9)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 9)) >= threshold_grey_low))
+=======
 			&& (greyvalues.at((greyvalues.size() - 6)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 6)) >= threshold_grey_low) )
 			//&& (greyvalues.at((greyvalues.size() - 7)) <= threshold_grey_high && greyvalues.at((greyvalues.size() - 7)) >= threshold_grey_low))
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 			{
 				returnvalue = true;
 			}
@@ -271,7 +282,8 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 		greyvalues.push_back(col);
 
 		// --Überprüfe, ob Schwellenwert überschritten.
-		if (col > threshold_grey_high && last_colour_down < threshold_grey_high) {
+		if (col > threshold_grey_high && last_colour_down < threshold_grey_high)
+		{
 			if (mission == EXPLORE_MISSION)
 				ex_state->handle(ExploreStateMachine::Event::OFF_TRAIL);
 			else if (mission == SEARCH_MISSION)
@@ -320,7 +332,8 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 				
 		}
 	
-		else if ((col  > threshold_grey_low && col < threshold_grey_high) && (last_colour_down > threshold_grey_low && last_colour_down < threshold_grey_high)) { // last_colour_down > THRESHOLD_COLOR_GRAU_SCHWARZ &&  col > THRESHOLD_COLOR_GRAU_WEISS && col < THRESHOLD_COLOR_GRAU_SCHWARZ
+		else if ((col  > threshold_grey_low && col < threshold_grey_high) && (last_colour_down > threshold_grey_low && last_colour_down < threshold_grey_high)) 
+		{
 			if (mission == START_MISSION)
 			{
 				std::cout << "AUFGRAUAUFGRAUAUFGRAU" << std::endl;
@@ -366,6 +379,16 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			}
 
 		}
+
+		/*else if ((col < threshold_grey_low || col > threshold_grey_high) && (last_colour_down < threshold_grey_low || last_colour_down > threshold_grey_high)) {
+			if (mission == START_LAUFER_MISSION)
+			{
+				if (sl_state->state() == StartLauferMachine::State::READY)
+				{
+					sl_state->handle(StartLauferMachine::Event:OFF_GREY);
+				}
+			}
+		} */
 
 		last_colour_down = col;
 		last_last_colour_down = last_colour_down;
@@ -531,13 +554,21 @@ void SnailRunner::onInputChanged(Bitfield bfield) {
 			// --Überprüfe, ob Schwellwert überschritten.
 			int dis_side = side().value();
 
+<<<<<<< HEAD
+			if (dis_side >= THRESHOLD_DISTANCE_SIDE && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
+=======
 			if (dis_side >= THRESHOLD_DISTANCE_SIDE && last_dis_side < THRESHOLD_DISTANCE_SIDE) {
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 				sl_state->handle(StartLauferMachine::Event::NO_SIDEWALL);
 			}
 			else if (dis_side <= threshold_distance_side_close && last_dis_side >= threshold_distance_side_close && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
 				sl_state->handle(StartLauferMachine::Event::TOO_CLOSE);
 			}
+<<<<<<< HEAD
+			else if ( dis_side >= threshold_distance_side_far && dis_side <= THRESHOLD_DISTANCE_SIDE && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
+=======
 			else if ( dis_side >= threshold_distance_side_far && last_dis_side >= threshold_distance_side_close && last_dis_side <= THRESHOLD_DISTANCE_SIDE) {
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 				sl_state->handle(StartLauferMachine::Event::TOO_FAR);
 			}
 			

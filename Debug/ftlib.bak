@@ -1,7 +1,11 @@
 --------------------------------------------------------------------------------
 FtMscLib.dll Version  01.05.11  (2012/02/19)
 FtLogLevel= 0
+<<<<<<< HEAD
+15:32:10:738, Initialization of Library 'ftMscLib.dll' ...
+=======
 17:00:22:643, Initialization of Library 'ftMscLib.dll' ...
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 
 INFO:   size FTX1_SHMIFINFO   = 64
 INFO:   size FTX1_STATE       = 100
@@ -20,6 +24,43 @@ INFO:   size FISH_X1_TRANSFER = 1024
 INFO: size IF08_MAX           = 9
 INFO: size IF08_TRANSFER      = 9216
 
+<<<<<<< HEAD
+15:32:10:751, Creating event objects...
+15:32:10:752, Starting thread [WaitMmRpTmEvent]...
+15:32:10:752,   [WaitMmRpTmEvent] started, hRpTmThrWait= 316
+15:32:10:753, Starting thread [WaitMmEvent]...
+15:32:10:754,   [WaitMmEventThread] started, hThrWait= 312
+15:32:10:754, Starting thread [FtRequestThread]...
+15:32:10:755,   [FtRequestThread] started, hThrRequest= 296
+15:32:10:756, Starting MMTimer... (mmRpTimerId= 16)
+15:32:10:757, ftMscLib is initialized ...
+
+15:32:10:809, OpenComDevice(), comStr= COM14
+15:32:13:317, ftxOpenComDevice(), ftHandle= 504
+15:32:13:319, Starting thread [ReadComThread]...
+15:32:13:320, Thread [ReadComThread] started..., hComRead= 508, IdComReadThread= 15556
+15:32:13:322, Open Fish.X1 connection...
+15:32:13:366, [SetFishX1InfoData] shmId= 0
+15:32:13:366,   Hostname          : ROBO TX-442
+15:32:13:367,   BtAddress         : 00:13:7B:54:AD:2B
+15:32:13:368,   Hardware Release  : C
+15:32:13:369,   Firmware Version  : V 1.30
+15:32:13:371,   DLL Version       : V 6
+15:32:13:371,   SharedMemoryStart : 0x20000204
+15:32:13:372,   AppAreaStart      : 0x30700000
+15:32:13:372,   AppAreaSize       : 0x000D0000
+15:32:13:389, Initialization output and config area...
+15:32:13:391, Info Master/Slave alive:  M  0  0  0  0  0  0  0  0
+15:32:13:391, InitTransferValues, Initialization of TransferArea (output)...
+15:32:13:493, SendRemoteCmd, XM_START: send remote command: 'get_ser_num'
+15:32:13:553, SendRemoteCmd, XM_GET_PROMPT: ROBO TX prompt received...
+15:32:13:554, serial_number= [0002085096]
+15:32:13:554, Starting Fish.X1 transfer...
+15:32:13:555, SetFishX1TransferStatus, set status = 2
+15:32:13:867, SetFishX1TransferStatus, set status = 1
+15:32:13:868, Fish.X1 transfer running...
+15:32:16:387, GetTransferAreasArrayAddr, fthdl= 504
+=======
 17:00:22:653, Creating event objects...
 17:00:22:654, Starting thread [WaitMmRpTmEvent]...
 17:00:22:655,   [WaitMmRpTmEvent] started, hRpTmThrWait= 412
@@ -55,3 +96,4 @@ INFO: size IF08_TRANSFER      = 9216
 17:00:25:687, SetFishX1TransferStatus, set status = 1
 17:00:25:688, Fish.X1 transfer running...
 17:00:27:518, GetTransferAreasArrayAddr, fthdl= 460
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75

@@ -12,6 +12,17 @@ class SnailRunner;
 class StartLauferMachine {
 public:
 
+<<<<<<< HEAD
+	enum class State {	FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, AUSRICHTEN_4, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, RELAY, LAMPE_GRAY, ENDE, READY,
+
+						OBSTACLE_DETECTED, EVASION_1, EVASION_2, EVASION_3, EVASION_4, EVASION_5, EVASION_6, BACK_1, BACK_2, ALLIGN_1, ALLIGN_2, CORRECT_TO_LEFT, CORRECT_TO_RIGHT, // STOPPING_GREY
+
+						VOR_FINAL, FINAL };
+
+	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, 
+						LICHT_HINTEN, NOT_LICHT_HINTEN, NO_SIDEWALL, // OFF_GREY 
+						TOO_CLOSE, TOO_FAR };
+=======
 	enum class State {
 		FAILURE, START, SUCHEN, AUSRICHTEN, AUSRICHTEN_2, AUSRICHTEN_3, AUSRICHTEN_4, CORRECT_TRAIL_LEFT, CORRECT_TRAIL_RIGHT, ON_TRAIL, OFF_TRAIL, STOPPING, RELAY, LAMPE_GRAY, ENDE, READY,
 
@@ -20,6 +31,7 @@ public:
 					   VOR_FINAL, FINAL };
 
 	enum class Event { WALL_AHEAD, NOT_WALL_AHEAD, OFF_TRAIL, ON_TRAIL, IS_STOPPED, ON_GREY, LICHT_HINTEN, NOT_LICHT_HINTEN, NO_SIDEWALL, TOO_CLOSE, TOO_FAR };
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 
 	StartLauferMachine(SnailRunner* r);
 	/* --Returns the current state. */
@@ -71,6 +83,11 @@ private:
 	void onEnteringAllign2();
 	void onEnteringCorrectToLeft();
 	void onEnteringCorrectToRight();
+<<<<<<< HEAD
+	void onEnteringStoppingGrey();
+
+=======
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 
 	void onEnteringVorFinal();
 	void onEnteringFinal();
@@ -111,6 +128,10 @@ private:
 	void onLeavingAllign2();
 	void onLeavingCorrectToLeft();
 	void onLeavingCorrectToRight();
+<<<<<<< HEAD
+	void onLeavingStoppingGrey();
+=======
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
 
 	void onLeavingVorFinal();
 	void onLeavingFinal();

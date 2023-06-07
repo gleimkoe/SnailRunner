@@ -266,7 +266,11 @@ void calibrationMenu(SnailRunner* robot)
 			std::cout << "Schwellwerte werden berechnet... "  << std::endl;
 
             //robot->grey =(robot->black + robot->white)/2;
+<<<<<<< HEAD
+			robot->threshold_grey_low = (robot->grey + robot->white) / 2; //+ 500;
+=======
            robot->threshold_grey_low = (robot->grey + robot->white)/2 + 500;
+>>>>>>> 36c5cd54ae53c7930c1fde1bf0bba0e2793dab75
            robot->threshold_grey_high = (robot->grey + robot->black)/2;
 
 		   std::cout << "Grau/Weiss: " << robot->threshold_grey_low << std::endl;
